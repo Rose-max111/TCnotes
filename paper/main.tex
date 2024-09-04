@@ -48,7 +48,7 @@
 
 \begin{abstract}
     Thermodynamic computers are believed to be more energy efficient than conventional computers, however, a practical implementation of a thermodynamic computer is still challenging. In this paper, we propose a thermodynamics driven computer that enables use to perform computation by editing its surface.
-    The crystalline structure is based on a universal elementary cellular automata, and is translational invariant in all spacial dimensions. The translational invariance not only makes the crystal easier to be constructed in nature, but also enables the study of the scaling behavior the thermalization process.
+    The crystalline structure is based on a universal elementary CA, and is translational invariant in all spacial dimensions. The translational invariance not only makes the crystal easier to be constructed in nature, but also enables the study of the scaling behavior the thermalization process.
 \end{abstract}
 
 \maketitle
@@ -87,7 +87,7 @@ There is no evidence yet that they can significantly outperform existing algorit
 Even when the encoded problem is an easy one, it is not guaranteed that the system can thermalize in polynomial time as we will show in the main text.
 
 Intrigued by the question of how to thermalize and lower the energy of an Ising machine, we propose a new type of TC that has a crystalline structure.
-The crystalline structure is based on a universal elementary cellular automata, and is translational invariant in all spacial dimensions.
+The crystalline structure is based on a universal elementary CA, and is translational invariant in all spacial dimensions.
 The translational invariance not only makes the crystal easier to be constructed in nature, but also enables the study of the scaling behavior the thermalization process.
 In the rest of this paper, we first show that the crystalline structure can be programmed on its surfaces to perform universal computation \Cref{sec:Overview-of-main-results}.
 Then we use numerical results in \Cref{sec:numerical-result} to show that if we thermalize the crystal from the so-called ``deterministic direction'', the crystal can thermalize in time almost linear to the size of the crystal, i.e. efficient computation can be performed.
@@ -132,7 +132,7 @@ Then we use numerical results in \Cref{sec:numerical-result} to show that if we 
 
 
 \section{Overview of the computation model}\label{sec:Overview-of-main-results}
-In this article, We develop a new type of TC shown in \Cref{Surface-programmable-thermodynamic computer}(a), which features a crystalline structure based on a universal elementary cellular automata, makes it easier to be constructed in real life. 
+In this article, We develop a new type of TC shown in \Cref{Surface-programmable-thermodynamic computer}(a), which features a crystalline structure based on a universal elementary CA, makes it easier to be constructed in real life. 
 
 \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
 \tikzset {_ue4dovf1e/.code = {\pgfsetadditionalshadetransform{ \pgftransformshift{\pgfpoint{0 bp } { -37.5 bp }  }  \pgftransformrotate{0 }  \pgftransformscale{2 }  }}}
@@ -562,13 +562,13 @@ color(100bp)=(transparent!80) }
 
     
     \end{tikzpicture}
-    \caption{Surface programmable thermodynamic computer (TC) and rule110 automata gadget. $\mathtt{(a)}$ Example of a surface programmable TC with a moving heat bath slowly doing ``calculation''. White circles are spins and black lines represent interaction between spins, while red rectangles represent cellular automata gadget. $\mathtt{(b)}$ Example of a rule110 gadget. Here spins $p$, $q$, and $r$ represent the left, middle, and right states in the cellular automata, respectively, while $q^\prime$ represents the result computed by the cellular automata, and $A$ is an auxiliary spin. We define a spin pointing up as representing logical 1 and pointing down as representing logical 0. \jinguo{why capital A? q' not clear.}}
+    \caption{Surface programmable thermodynamic computer (TC) and rule110 automata gadget. $\mathtt{(a)}$ Example of a surface programmable TC with a moving heat bath slowly doing ``calculation''. White circles are spins and black lines represent interaction between spins, while red rectangles represent CA gadget. $\mathtt{(b)}$ Example of a rule110 gadget. Here spins $p$, $q$, and $r$ represent the left, middle, and right states in the cellular automata, respectively, while $q^\prime$ represents the result computed by the cellular automata, and $A$ is an auxiliary spin. We define a spin pointing up as representing logical 1 and pointing down as representing logical 0. \jinguo{why capital A? q' not clear.}}
     \label{Surface-programmable-thermodynamic computer}
 \end{figure}
 
 The physical implementation of the TC is based on spins, with computational information encoded in the orientation of the spins, represented by white circles, while the red box represents a logic circuit, composed of several spins. The horizontal axis represents the number of computational layers, with spins belonging to the same computational layer sharing the same horizontal coordinate, and vertical axis represents the number of spins in each layer. 
 
-The input layer consists of the leftmost spin, while the output layer consists of the rightmost spin. The entire computing process can be described by gradually moving the external heat bath, which creates a temperature gradient and, consequently, a heat zone, from the input layer to the output layer. By utilizing thermal fluctuations from the heat bath, the spins in different layers sequentially settle into low-energy states within the state space, effectively completing the iterative computation of the cellular automata.
+The input layer consists of the leftmost spin, while the output layer consists of the rightmost spin. The entire computing process can be described by gradually moving the external heat bath, which creates a temperature gradient and, consequently, a heat zone, from the input layer to the output layer. By utilizing thermal fluctuations from the heat bath, the spins in different layers sequentially settle into low-energy states within the state space, effectively completing the iterative computation of the CA.
 
 Users can design the computing algorithm and obtain the desired output by setting the input configuration and then making slight movements to the external heat bath, requiring only approximately linear time (up to a $\log^2$ factor) with respect to the number of layers.
 
@@ -578,8 +578,8 @@ Users can design the computing algorithm and obtain the desired output by settin
 In cellular automata (CA), `space' is a regular lattice of `cells', each of which contains one of a small allowed set of integers.
 Only cells that are close together interact in one `time-step'-the time evolution is given by a rule that looks at the contents of a few neighbouring cells, and decides what should change. At each step, this local rule is applied everywhere simultaneously~\cite{}.
 Depending on different rules, some CAs can be more complex than others.
-The most interesting category is those proved to be universal~\cite{Berlekamp2004}, meaning that they can simulate any computer program. The best-known examples in two-dimensional include Conway's~\cite{Games1970} ``Game of Life'', Margolus's reversible cellular automata~\cite{Margolus1984} and its quantum version~\cite{Arrighi2012}.
-The simplest universal CA is a 1-dimensional cellular automata, namely, the rule 110 CA~\cite{Cook2009}.
+The most interesting category is those proved to be universal~\cite{Berlekamp2004}, meaning that they can simulate any computer program. The best-known examples in two-dimensional include Conway's~\cite{Games1970} ``Game of Life'', Margolus's reversible CA~\cite{Margolus1984} and its quantum version~\cite{Arrighi2012}.
+The simplest universal CA is a 1-dimensional CA, namely, the rule 110 CA~\cite{Cook2009}.
 This CA is an elementary CA that defined on a one dimensional grid, each cell has two possible states (labeled by 0 and 1). The rule of an elementary CA to determine the state of the cell in next generation depends only on the current state of the cell and its two immediate neighbors. The number of possible elementary CA rules is the same as the number of 3-input Boolean functions, which is $2^{2^3} = 256$. The Boolean function for rule 110 is shown in the following table:
 
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
@@ -618,8 +618,8 @@ For example the logic expression $z = \neg (x \land y)$ can be encoded into the 
     \end{split}
 \end{equation}
 where, the variable $c$ is an ancilla spin.
-A cellular automata can be viewed as a translational invariant logic circuit, and thus can be encoded into the Ising model. The ground states of the Ising model encode the correspondence between the inputs and the outputs of the cellular automata.
-Directly synthesizing the logic circuit for the universal $110$ rule (\Cref{eq:110rule}) requires at least 3 ancilla spins, which is far from optimal. By converting the gadget finding problem to a linear programming problem~\cite{}, we propose a provable optimal method to encode any cellular automata rule into the Ising model, which is described in \Cref{sec:gadget-design}.
+A CA can be viewed as a translational invariant logic circuit, and thus can be encoded into the Ising model. The ground states of the Ising model encode the correspondence between the inputs and the outputs of the CA.
+Directly synthesizing the logic circuit for the universal $110$ rule (\Cref{eq:110rule}) requires at least 3 ancilla spins, which is far from optimal. By converting the gadget finding problem to a linear programming problem~\cite{}, we propose a provable optimal method to encode any CA rule into the Ising model, which is described in \Cref{sec:gadget-design}.
 The proposed gadget for the $110$ rule is shown in \Cref{Surface-programmable-thermodynamic computer}(b), which only requires 1 ancilla spin.
 The interaction energy and onsite energy of the rule 110 gadget are given below, where $p, q, r$ and inputs and $q'$ is the output in \Cref{Surface-programmable-thermodynamic computer}(b), respectively, while spin $A$ is the auxiliary spin.
 \begin{equation}
@@ -644,14 +644,14 @@ A & 5\\
 \end{block}
 \end{blockarray}
 \end{equation}
-Since a copy gate\jinguo{do we really use copy gates?} can be simply described as two spins with an interaction $J_{u, v}=1$, and by applying the method of connecting logic gates~\cite{Aadit2022}, we can concatenate the rule 110 gadget with some copy gates, ultimately forming the TC shown in [Fig. \ref{Surface-programmable-thermodynamic computer}(a)]. The gadget we constructed based on the Rule 110 cellular automata
+Since a copy gate\jinguo{do we really use copy gates?} can be simply described as two spins with an interaction $J_{u, v}=1$, and by applying the method of connecting logic gates~\cite{Aadit2022}, we can concatenate the rule 110 gadget with some copy gates, ultimately forming the TC shown in [Fig. \ref{Surface-programmable-thermodynamic computer}(a)]. The gadget we constructed based on the Rule 110 CA
 naturally possesses Turing completeness. Therefore, this 2-dimensional TC is capable of universal computing.
 
 \subsection{Cooling computation with a moving heat bath}\label{cooling-computation-with-moving-heat-bath}
 
-The computational process of the cellular automata is divided into three steps: determining the state of each input cell, iteratively applying the transition rules to generate the next generation of cells, and identifying a certain generation of cells as the output. In fact, the width of the time axis in the Ising TC corresponds to the number of iterations. Hence, the smallest layer of spins on the time axis should be the input layer, and the largest layer of spins should be the output layer. 
+The computational process of the CA is divided into three steps: determining the state of each input cell, iteratively applying the transition rules to generate the next generation of cells, and identifying a certain generation of cells as the output. In fact, the width of the time axis in the Ising TC corresponds to the number of iterations. Hence, the smallest layer of spins on the time axis should be the input layer, and the largest layer of spins should be the output layer. 
 
-Given that each ground state of the TC corresponds to a valid computational process of the cellular automata for a given input, the computational process of the TC is essentially reduced to finding the ground state of the TC with the spin configuration in the input layers fixed.
+Given that each ground state of the TC corresponds to a valid computational process of the CA for a given input, the computational process of the TC is essentially reduced to finding the ground state of the TC with the spin configuration in the input layers fixed.
 
 We focus here on the thermodynamics-driven approach to finding ground states, specifically the heating-annealing method. This involves gradually increasing and then decreasing the temperature of the heat bath with which the TC interacts. The TC may employ heat fluctuations to explore a state space in the first stage and stabilize on ground state during the second stage as long as the annealing stage is long enough. However, it is convinced that this stage can last for exponential time for some hard spin-glass problems.
 
@@ -858,14 +858,14 @@ acceptance probability.
 
 \subsection{Energy model}\label{a-2d-surface-programmable-material}
 
-Given that simulating a cellular automata with a deep computational layer on the Ising model requires a large number of spins, making large-scale numerical simulations impractical, we opted to introduce a similar but simpler energy model to observe the behavior on a larger scale.
+Given that simulating a CA with a deep computational layer on the Ising model requires a large number of spins, making large-scale numerical simulations impractical, we opted to introduce a similar but simpler energy model to observe the behavior on a larger scale.
 
 Let us define a model Hamiltonian on a 2D lattice of size $S \times T$ as
 \begin{equation}\label{eq:toy-hamiltonian}
 H = \sum_{t=1}^{T-1}\sum_{i=1}^{S} (n_{i+1, t} \land \neg(n_{i, t} \land \neg n_{i-1, t})) \veebar n_{i,t+1},
 \end{equation}
 where $n_{i, t} \in \{0, 1\}$ is the state of the cell at row $i$ and column $t$, the boundary is periodic in the space direction, i.e. $n_{0, t} = n_{S, t}$.
-Its ground state with energy $0$ encodes a $110$ cellular automata, where the direction of computation is from the left to right.
+Its ground state with energy $0$ encodes a $110$ CA, where the direction of computation is from the left to right.
 \subsection{Numerical result}
 
 
@@ -1057,7 +1057,7 @@ non-deterministic direction.
 
 \subsubsection{The Rule 110 Gadget}\label{the-rule-110-gadget}
 
-We can encode the Rule 110 cellular automata into a Weighted Maximum
+We can encode the Rule 110 CA into a Weighted Maximum
 Independent Set Problem, with blue vertices assigned a weight of 1 and
 red vertices assigned a weight of 2, as follows.
 
@@ -1102,7 +1102,7 @@ Utilizing copy gadget and cross gadget~\cite{Nguyen2023}, we construct a \textbf
 \caption{Alt text}
 \end{figure}
 
-The above gadget depicts a two-layer cellular automata. The vertices in
+The above gadget depicts a two-layer CA. The vertices in
 blue, red, green and black have weights of 1, 2, 3 and 4, respectively.
 In the automata diagram, the above gadget is equivalent to:
 
