@@ -38,7 +38,7 @@
 
 \begin{document}
 
-\title{Surface programmable materials}
+\title{Crystal as a thermodynamic computer}
 
 \author{Authors}
 \email{xxx@xxx.com}
@@ -75,7 +75,7 @@ The computational process of TCs utilizes the tendency of a physical system to e
 By manipulating the minimum free energy state of the system, the computation can be performed.
 The change of free energy minimum state can be achieved by changing the distribution of the particles in the system, such as in the case of DNA machines~\cite{Feynman2018} or lowering the temperature of the system, such as in the case of Ising machines~\cite{boixo2013experimental}.
 The former is known as the Brownian machine, which evolves the system toward the direction of the entropy increase, while the latter are energy based, which evolves the system toward the direction of the energy decrease.
-\jinguo{What category are the memristors?}
+\jinguo{What category are the memristors?} \ym{Memristors are energy based, which evolves the system toward the direction of the energy decrease.}
 
 Energy based models are probability one of the most powerful models for computation.
 The Ising model is not only capable of universal computation~\cite{gu2012encoding}, and it can be used to formulate many NP problems~\cite{lucas2014ising,mohseni2022ising}.
@@ -540,15 +540,15 @@ color(100bp)=(transparent!80) }
     % Text Node
     \draw (490.67,121.47) node [anchor=north west][inner sep=3pt]   [align=left] {\large {$\displaystyle \mathtt{(b)}$}};
     % Text Node
-    \draw (492.43,150.41) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\tiny {\fontfamily{ptm}\selectfont p}}};
+    \draw (492.00,150.41) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\tiny {$p$}}};
     % Text Node
-    \draw (479.75,168.95) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\fontfamily{ptm}\selectfont {\tiny q}}};
+    \draw (479.75,168.95) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\tiny {$q$}}};
     % Text Node
-    \draw (492.83,188.12) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\tiny {\fontfamily{ptm}\selectfont r}}};
+    \draw (492.45,188.12) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\tiny {$r$}}};
     % Text Node
-    \draw (525.34,167.95) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\tiny {\fontfamily{ptm}\selectfont q'}}};
+    \draw (525.00,166.95) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\tiny {$q'$}}};
     % Text Node
-    \draw (504.00,168.45) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\tiny {\fontfamily{ptm}\selectfont A}}};
+    \draw (504.00,168.45) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\tiny {$A$}}};
     
     \draw [<->] [line width=1.0] (283.2, 295.4) -- (365.2, 295.4) ;
     \draw [->] [line width=1.0] (310, 73) -- (337, 73);
@@ -573,6 +573,8 @@ Users can design the computing algorithm and obtain the desired output by settin
 \section{Model and Method}\label{sec:model-method}
 
 \subsection{Elementary cellular automaton}\label{elementary-cellular-automaton}
+
+\jinguo{general CA, then the 1D CA.}
 \ym{I haven't made change in this section}
 
 An elementary cellular automaton is a 1-dimensional cellular
@@ -656,8 +658,40 @@ A & 5\\
 \end{block}
 \end{blockarray}
 \end{equation}
-Since a copy gate\jinguo{do we really use copy gates?} can be simply described as two spins with an interaction $J_{u, v}=1$, and by applying the method of connecting logic gates~\cite{Aadit2022}, we can concatenate the rule 110 gadget with some copy gates, ultimately forming the TC shown in [Fig. \ref{Surface-programmable-thermodynamic computer}(a)]. The gadget we constructed based on the Rule 110 cellular automaton
+Since a copy gate\jinguo{do we really use copy gates?} \ym{No need in practice, but indeed used in Fig.1a} can be simply described as two spins with an interaction $J_{u, v}=1$, and by applying the method of connecting logic gates~\cite{Aadit2022}, we can concatenate the rule 110 gadget with some copy gates, ultimately forming the TC shown in [Fig. \ref{Surface-programmable-thermodynamic computer}(a)]. The gadget we constructed based on the Rule 110 cellular automaton
 naturally possesses Turing completeness. Therefore, this 2-dimensional TC is capable of universal computing.
+
+\subsection{Simulated Annealing}
+
+It is known that when the system and heat bath are at thermal equilibrium, 
+the probability of a spin configuration $|\mathbf{s}\rangle$ is given by the Boltzmann distribution:
+
+\begin{equation}
+    |\mathbf{s}\rangle = \frac{1}{Z}\exp\left(- \frac{E_{|\mathbf{s}\rangle}}{k_bT}\right)
+\end{equation}
+
+where $Z = \sum_{|\mathbf{s}\rangle} \exp\left(-\frac{E_{|\mathbf{s}\rangle}}{k_bT}\right)$ is the partition function, 
+$E_{|\mathbf{s}\rangle}$ is the energy of the each of $2^n$ spin configuration, labeled by $|\mathbf{s}\rangle = |s_1, s_2, \cdots, s_n\rangle$, $k_b$ is the Boltzmann constant, and $T$ is the temperature of the heat bath. 
+In the following, we set $k_b = 1$.
+
+We employ the Metropolis-Hastings algorithm~\cite{metropolis1953equation} to characterize the thermodynamic process of the TC system as modulated by the heat bath.
+This algorithm perform a random walk in the state space of the TC, each step we try to flip a spin,
+and the probability of accepting a move from state $|\mathbf{s}\rangle$ to $|\mathbf{s}^\prime\rangle$ is given by:
+
+\begin{equation}
+    P_{\text{accept}} = \frac{1}{1+\exp\left(\frac{E_{|\mathbf{s}^\prime\rangle} - E_{|\mathbf{s}\rangle}}{T}\right)}
+\end{equation}
+
+This accepting probability follows from the glauber dynamics~\cite{glauber1963time}.
+It can be shown that this process is markovian and ergodic, and the system will eventually reach the thermal equilibrium.
+To determine the speed of the convergence, we should notice the spectral gap of the transition matrix of the Markov chain, which is defined as
+
+\begin{equation}
+    \Delta = 1 - \frac{\lambda_2}{\lambda_1}
+\end{equation}
+
+where $\lambda_1$ and $\lambda_2$ are the largest and second largest eigenvalues of the transition matrix, respectively.
+In order to sample from the distribution $\epsilon$ close to the equilibrilium distribution, the number of steps required is $O(\log_{1-\Delta} \epsilon)$.
 
 \subsection{Cooling computation with a moving heat bath}\label{cooling-computation-with-moving-heat-bath}
 
@@ -723,8 +757,6 @@ The goal is to drive the the \textbf{state} to the one with lowest energy as fas
 
 \subsubsection{Estimation of the computing time along computation direction}\label{estimation-of-the-computing-time}
 
-\ym{This part should be rewrote in future..My words are so poor.}
-
 Let us initially treat the heat bath as ideal, assuming that the temperature within the interacting region of the system is uniform and that the temperature outside this region is zero. We refer to the interacting region as the ``Heat Zone''.
 
 Assume there is an annealing procedure that may prevent the layers in the Heat Zone from stabilizing in the local ground state, or equivalently, that an error occurs in the computation process with a probability $\epsilon$. Repeating this procedure $\frac{T}{W}$ times would result in a probability of $(1-\epsilon)^{\frac{T}{W}}$ to successfully find the proper global ground state. To maintain a constant success probability as $T \rightarrow +\infty$, the error probability $\epsilon$ should scale as $\frac{W}{T}$.
@@ -737,15 +769,23 @@ Now we turn to determining the annealing time $t_{th}$ required to achieve an er
 
 And the total annealing time scale as $\frac{T}{W}\ln(\frac{T}{W})e^W$.
 
-In practice, temperature changes cannot occur instantaneously, and the temperature distribution within the heating zone may not be uniform. Thus, it is necessary to account for the effective width of the Heat Zone when the the heat bath are not ideal.
+In practice, temperature changes cannot occur instantaneously, and the temperature distribution within the heating zone may not be uniform.
+Thus, we come up with a more realistic model for the block annealing process.
 
-Suppose the middle of the heat bath is at $middle(t)$, and the temperature at the region with a Time coordinate $x$ can be represent as $Temp(x) \propto \Lambda^{-|x - middle(t)|}$. Then
+Now suppose the heat bath only connects to a small rectangle region of the system,
+covers the region encompassing all time coordinates between $[middle(t)-\frac{\Delta_L}{2}, middle(t)+\frac{\Delta_L}{2}]$, where $\Delta_L$ is a small constant.
+The heat radiation is conducted to other regions, thereby inducing a temperature gradient,
+which can be modeled as $T(x) \propto \Lambda^{-|x - middle(t)|}$, where $T(x)$ is the temperature at the region with a time coordinate $x$, and $\Lambda$ is a constant.
 
-\begin{equation}
-    e^{-\Delta E \Lambda^{cW}} \sim \epsilon \sim \frac{W}{T}
-\end{equation}
+The block annealing process then can be reconstruct as slowly moving
+the middle of the heat bath from one end to the other. Defining $\Delta E_{max}$ to be the
+largest possible energy change when a spin is fliped.
+The effective heat zone should then be $[y-W, y]$, where position $y$ satisfying 
+$\exp(\frac{\Delta E_{max}}{T(y)}) = 0.1$ and $y<middle(t)$. Since the layers
+in fronts of the effective heat zone can only be fliped with a $\epsilon$ probability if the local energy would increase. 
+The effective width $W$ then should scale as $\exp(-\Delta E_{max} \Lambda^{cW}) \sim \epsilon \sim \frac{W}{T}$, where $c$ is the empirical constant for effective width and can be determined during the experiment. 
 
-Where $c$ is the empirical constant for effective width and can be determined during the experiment. The total annealing time should be
+The total annealing time can be calculated as 
 
 \begin{equation}
     t_{total} = \frac{T}{W}(\ln(\frac{T}{W}))^{1+ \frac{1}{c\ln(\Lambda)}}
@@ -757,92 +797,14 @@ We fixed the number of layers and denote $n$ as the width of each layer in this 
 
 However, we fail to derive an explicitly expression for the time complexity in this direction. 
 Numerical result shows that computing complexity is linear to $n$. Thus a total time
-for the computation should scale as $nm\log^2(m)e^{(1-\lambda)^{-1}}$ 
+for the computation should scale as $nm\log^{1 + \frac{1}{c\ln(\Lambda)}}(m)$ 
 
-\subsubsection{Testing model through equilibrilium SA}\label{temperature-gradient-and-energy-gradient}
-
-We used simulated annealing to mimic the heating-annealing process.
-However, classical simulated annealing can only handle the situation
-where the temperature is space-invariant. Thus, a scheme change is needed.
-
-One can simply
-make the following modification to the transition probability in the
-markov process and return to the situation, called energy-gradient scheme, where the temperature is space-invariant.
-
-\begin{equation}
-e^{-\frac{\Delta E_k}{T\lambda^{ct+k}}} = e^{-\frac{\Delta E_k(\frac{1}{\lambda})^k}{T\lambda^{ct}}} = e^{-\frac{\Delta E_k \Lambda^k}{T(t)}}
-\end{equation}
-
-Where we denote $\Lambda = \frac{1}{\lambda}$ and the time complexity in $\Lambda$ form is apparently
-$T_{total} \sim \frac{m}{W}\log^2(\frac{m}{W})e^{(\Lambda-1)^{-1}}$
-
-
-
-\subsection{Algorithm beyond temperature
-gradient}\label{algorithm-beyond-temperature-gradient}
-
-Applying a huge energy gradient or temperature gradient to this material
-seems not a good idea when the system become larger.
-
-Inspired by the way clothes are ironed, we conceived an idea called wave-packet scheme, that slowly
-scanning a wave-shaped temperature curve from one end to the other. This
-method is widely used in studying the heating-recrystallization
-properties of real materials~\cite{Zhang2014}.
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=\columnwidth]{../notes/images/zhang2014.png}
-\caption{Method to scan the wave packet}
-\end{figure}
-
-There are various specific choices for the wave packet, such as
-power-law, exponential, and others. In this context, we primarily focus
-on a exponential wave packet, which can be directly linked to the
-concept of energy gradient.
-
-A expoential wave packet with central position $middle(t)$, amplitude
-$A$ and base $\Lambda$, can be express as following.
-
-\[
-T(k,t) = A\Lambda^{|k-middle(t)|}
-\]
-
-So slowly moving the wave packet means slowly changing $middle(t)$
-
-Let's review the concept \textbf{active zone} defined earlier. When the
-temperature of the system is defined as
-$T_{tg}(k, t) = T\lambda^{ct-k}$, atoms in the active zone are those
-whose layer $k$ belongs to $k<ct - \frac{W}{2}$, where $W$ are
-given by
-$e^{-\frac{\Delta E_{max}}{\lambda^{\frac{W}{2}}}}\leq \epsilon$. For
-those $k<ct - \frac{W}{2}$, the probability that SA would flip an
-atom's state is no more than
-$e^{-\frac{\Delta E_{max}}{T\lambda^{ct}\lambda^{-ct + \frac{W}{2}}}}=e^{-\frac{\Delta E_{max}}{T\lambda^{\frac{W}{2}}}}\leq \epsilon^{\frac{1}{T}}$,
-which means these previous layer would stay ``frozen''. For those layer
-much deeper than $k = ct$, SA would just randomly flip them. These
-layer won't affect layers in active zone.
-
-Now turn our sight into the wave packet model, we can construct a
-similar concept \textbf{heat zone}. Layers in the heat zone are those
-$A\lambda^{|k-middle(t)|}\ge \epsilon\rightarrow middle(t) + \frac{\log(\epsilon)}{\log(\Lambda)}< k < middle(t) - \frac{\log(\epsilon)}{\log(\Lambda)}$.
-
-The layers that shallower than
-$middle(t) + \frac{\log(\epsilon)}{\log(\Lambda)}$ correspond to
-layers shallower than $ct-\frac{W}{2}$ in temperature gradient model,
-since they are both stay ``frozen''; layers between
-$middle(t) +\frac{\log(\epsilon)}{\log(\Lambda)}$ and $middle(t)$
-are effectively cooled down, which correspond to the \textbf{active
-zone}; layers deeper than $middle(t)$ are either randomly fliped or
-stay ``frozen'', but we don't care their state.
-
-Therefore, the wave packet model are just the same as the temperature
-gradient model, and is more likely to be realized physically.
-
-\subsubsection{Some details about non-equilibrium simulated
+\subsubsection{Testing model with non-equilibrium simulated
 annealing}\label{some-details-about-non-equilibrium-simulated-annealing}
 
 The classical simulated annealing can only deal with the situation that
-the temperature is space-invariant. Although there are many ways to
+the temperature is space-invariant. However, we need to borden this concept
+due to the temperature gradient. Although there are many ways to
 simulated a real-world system with temperature gradient, such as
 Molecular Dynamics \cite{Bai2015, Deng2006}, but
 these methods mainly depend on dynamically adjusting the atomic
@@ -855,7 +817,7 @@ However, these methods fail to establish a direct connection between the simulat
 temperature~\cite{Zollner2014}.
 Therefore, based on HeatBath acceptance rule, we made a slight modification to the classical SA model.
 
-When we flip one atom's state, there would be some energy difference
+When we flip one spin, there would be some energy difference
 $\Delta E_{i}$ in field $i$ with temperature $T_i$. The
 probability to accept this flip would be
 
@@ -865,7 +827,9 @@ P = \frac{1}{1 + e^{\sum_i \frac{\Delta E_i}{T_i}}}
 
 It is easily to observe that when the system returns to
 heat-equilibrium, the probability reverts to the classical HeatBath
-acceptance probability.
+acceptance probability. We also provided a more general proof by constructing another equivalent model in Appendix \ref{proof-of_non-equilibrium-SA}.
+
+
 \section{Numerical simulation}\label{sec:numerical-result}
 
 \subsection{Energy model}\label{a-2d-surface-programmable-material}
@@ -1000,6 +964,30 @@ J = \begin{pmatrix}
 2\\
 5
 \end{pmatrix}
+\end{equation}
+
+\section{Proof of the applicability of non-equilibrium SA}\label{proof-of_non-equilibrium-SA}
+
+Assume there is another model where the temperature at the region with 
+time coordinate $x$ at step $t$ is $T(x, t) = T_0\Lambda^{x - \eta t}$, where 
+$\eta$ is cooling constant and $T_0$ satisfies $\exp(\frac{\Delta E_{max}}{T_0})\approx 1$, 
+which means all the system stays in a relative high temperature initially. 
+We called this model as temperature gradient model.
+
+The cooling process starts at $t=0$ and ends at $t=t_{end}$, where $t_{end}$ satisfies
+$\exp(\frac{\Delta E_{max}}{T_0\Lambda^{T - \eta t_{end}}}) \gg 1$, representing there wouldn't be any heat
+fluctuations in the system. By noticing that we can define the effective heat zone
+similarly to the moving heat bath model and then evaluating the time complexity, one can show that these two model are
+equivalent.
+
+The temperature gradient model can then be easily transform to
+the energy gradient model in which equilibrilium SA can be applied by rescale local interacting and onsite energy.
+The markov process can be treated with uniform temperature while rescale the energy associated with spin with Time-coordinate $x$
+to be $E_{energy-gradient}(x) = E_{temp-gradient}(x)\Lambda^{-x}$. The acceptance probability is
+invariant under this transformation.
+
+\begin{equation}
+    \exp\left({\frac{\Delta E_x}{T\Lambda^{x-\eta t}}}\right) = \exp\left({\frac{\Delta E_x\Lambda^{-x}}{T\Lambda^{-\eta t}}}\right) = \exp\left({\frac{\Delta E_x \Lambda^{-x}}{T(t)}}\right)
 \end{equation}
 
 \section{The implmentation in Rydberg atoms array}\label{physical-model-rydberg-atoms-array}
