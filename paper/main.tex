@@ -979,6 +979,15 @@ invariant under this transformation.
     \exp\left({\frac{\Delta E_x}{T\Lambda^{x-\eta t}}}\right) = \exp\left({\frac{\Delta E_x\Lambda^{-x}}{T\Lambda^{-\eta t}}}\right) = \exp\left({\frac{\Delta E_x \Lambda^{-x}}{T(t)}}\right)
 \end{equation}
 
+We conducted numerical experiments to verify this equivalence under the condition
+that $\Lambda = 1.3$ and $n=15$. The result is shown in [Fig. \ref{EGvsMHB}].
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/EGvsMHB.png}
+    \caption{Running time v.s Depth of the material}
+    \label{EGvsMHB}
+\end{figure}
+
 \section{The implmentation in Rydberg atoms array}\label{physical-model-rydberg-atoms-array}
 Let us consider a Rydberg atoms array with a two dimensional embedding. The coordinate of the atom $v$ is denoted as $\mathbf{r}_v$.
 The Rydberg Hamiltonian~\cite{Nguyen2023} is defined as
