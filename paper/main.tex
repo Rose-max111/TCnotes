@@ -49,20 +49,16 @@
 \begin{abstract}
     Thermodynamic computers are believed to be more energy efficient than conventional computers, however, a practical implementation of a thermodynamic computer is still challenging. In this paper, we propose a thermodynamics driven computer that enables use to perform computation by editing its surface.
     The crystalline structure is based on a universal elementary CA, and is translational invariant in all spacial dimensions. The translational invariance not only makes the crystal easier to be constructed in nature, but also enables the study of the scaling behavior the thermalization process.
+    Efficiency of the computation of the proposed thermodynamic computer is demonstrated by numerical results.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
 
-\jinguo{Please cover the following topics:
-\begin{enumerate}
-    \item The method to thermalize, inspired from crystalization and heat zone.
-\end{enumerate}
-}
+\jinguo{}
 \ym{Need to add a brief summary about the state-of-the-art TCs. Following is some basic summaries of references
 \begin{enumerate}
-    \item The material was orderly grown by slowly moving the temperature gradient in-plane~\cite{Zhang2014}. Tested thermal gradient force for grain boundary migration~\cite{Bai2015}.
     \item Discussed the architecture of future thermodynamic computer and brought up an idea about the understanding of using TC to solve problems~\cite{hylton2021vision}.
     \item TODO: search for gadgets for array multiplier.
 \end{enumerate}
@@ -132,7 +128,10 @@ Then we use numerical results in \Cref{sec:numerical-result} to show that if we 
 
 
 \section{Overview of the computation model}\label{sec:Overview-of-main-results}
-In this article, We develop a new type of TC shown in \Cref{Surface-programmable-thermodynamic computer}(a), which features a crystalline structure based on a universal elementary CA, makes it easier to be constructed in real life. 
+The TC we are proposing is shown in \Cref{Surface-programmable-thermodynamic computer}. It features a crystalline structure that encodes the time evolution of a universal CA that capable of performing universal computation.
+To encode a $D$-dimensional CA, we need a $D+1$-dimensional crystal. The extra dimension is used to encode the time-axis of the CA.
+For simplicity, we will focus on the 1D 110 rule elementary CA in the rest of this paper.
+The physical implementation of the TC is based on the Ising model, where we use the spin up and down to encode the state $1$ and $0$ of the cellular automata, respectively. The energy of the Ising model is designed to be minimized when the spins are in the state that satisfies the rule 110 cellular automata, which can be achieved by constructing the rule 110 gadget shown in the inset of \Cref{Surface-programmable-thermodynamic computer}.
 
 \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
 \tikzset {_ue4dovf1e/.code = {\pgfsetadditionalshadetransform{ \pgftransformshift{\pgfpoint{0 bp } { -37.5 bp }  }  \pgftransformrotate{0 }  \pgftransformscale{2 }  }}}
@@ -538,9 +537,9 @@ color(100bp)=(transparent!80) }
     % Text Node
     \draw (292,45) node [anchor=north west][inner sep=0.75pt]   [align=left] {${Heat\ Zone}$};
     % Text Node
-    \draw (220.87,45.67) node [anchor=north west][inner sep=3pt]   [align=left] {\large {$\displaystyle \mathtt{(a)}$}};
+    %\draw (220.87,45.67) node [anchor=north west][inner sep=3pt]   [align=left] {\large {$\displaystyle \mathtt{(a)}$}};
     % Text Node
-    \draw (490.67,121.47) node [anchor=north west][inner sep=3pt]   [align=left] {\large {$\displaystyle \mathtt{(b)}$}};
+    %\draw (490.67,121.47) node [anchor=north west][inner sep=3pt]   [align=left] {\large {$\displaystyle \mathtt{(b)}$}};
     % Text Node
     \draw (492.00,150.41) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\tiny {$p$}}};
     % Text Node
@@ -562,15 +561,19 @@ color(100bp)=(transparent!80) }
 
     
     \end{tikzpicture}
-    \caption{Surface programmable thermodynamic computer (TC) and rule110 automata gadget. $\mathtt{(a)}$ Example of a surface programmable TC with a moving heat bath slowly doing ``calculation''. White circles are spins and black lines represent interaction between spins, while red rectangles represent CA gadget. $\mathtt{(b)}$ Example of a rule110 gadget. Here spins $p$, $q$, and $r$ represent the left, middle, and right states in the cellular automata, respectively, while $q^\prime$ represents the result computed by the cellular automata, and $A$ is an auxiliary spin. We define a spin pointing up as representing logical 1 and pointing down as representing logical 0. \jinguo{why capital A? q' not clear.}}
+    \caption{A surface programmable thermodynamic computer (TC) that implements the rule 110 elementary cellular automata. The vertical direction is the space axis,
+    while the horizontal direction is the time axis.
+    The computation is done by moving the heat zone (orange colored area) from the input surface (left) to the output surface (right) slowly with a constant speed $v$.
+    The TC has a translational invariant structure, and each unit cell (inset) is a $110$ rule cellular automata gadget that consists of 5 mutually correlated spins (white circles).
+    \jinguo{please add symbols for space, time and width}}
     \label{Surface-programmable-thermodynamic computer}
 \end{figure}
 
-The physical implementation of the TC is based on spins, with computational information encoded in the orientation of the spins, represented by white circles, while the red box represents a logic circuit, composed of several spins. The horizontal axis represents the number of computational layers, with spins belonging to the same computational layer sharing the same horizontal coordinate, and vertical axis represents the number of spins in each layer. 
+The inputs, including the data and the program are encoded in the initial configuration of the spins on the left surface. These spins are fixed during the computation.
+The entire computing process can be described by gradually moving an external heat bath with finite width from the input end to the output end.
+It creates a temperature gradient and, consequently, a heat zone of width $W$. By utilizing thermal fluctuations from the heat bath, the spins in different layers sequentially settle into low-energy states within the state space, effectively completing the iterative computation of the CA.
 
-The input layer consists of the leftmost spin, while the output layer consists of the rightmost spin. The entire computing process can be described by gradually moving the external heat bath, which creates a temperature gradient and, consequently, a heat zone, from the input layer to the output layer. By utilizing thermal fluctuations from the heat bath, the spins in different layers sequentially settle into low-energy states within the state space, effectively completing the iterative computation of the CA.
-
-Users can design the computing algorithm and obtain the desired output by setting the input configuration and then making slight movements to the external heat bath, requiring only approximately linear time (up to a $\log^2$ factor) with respect to the number of layers.
+%Users can design the computing algorithm and obtain the desired output by setting the input configuration and then making slight movements to the external heat bath, requiring only approximately linear time (up to a $\log^2$ factor) with respect to the number of layers.
 
 \section{Model and Method}\label{sec:model-method}
 
@@ -597,7 +600,7 @@ Let us denote the states of the three cells as $p$, $q$, and $r$, from left to r
 \end{equation}
 where $q^\prime$ is the state of the center cell in the next generation.
 
-\subsection{Mapping CA to Ising model}
+\subsection{CA embedded in an Ising model}
 
 An $n$-vertex fully connected spin-glass Hamiltonian is described as follows.
 
@@ -644,8 +647,9 @@ A & 5\\
 \end{block}
 \end{blockarray}
 \end{equation}
-Since a copy gate\jinguo{do we really use copy gates?} \ym{No need in practice, but indeed used in Fig.1a} can be simply described as two spins with an interaction $J_{u, v}=1$, and by applying the method of connecting logic gates~\cite{Aadit2022}, we can concatenate the rule 110 gadget with some copy gates, ultimately forming the TC shown in [Fig. \ref{Surface-programmable-thermodynamic computer}(a)]. The gadget we constructed based on the Rule 110 CA
-naturally possesses Turing completeness. Therefore, this 2-dimensional TC is capable of universal computing.
+%Since a copy gate\jinguo{do we really use copy gates?} \ym{No need in practice, but indeed used in Fig.1a} can be simply described as two spins with an interaction $J_{u, v}=1$, and by applying the method of connecting logic gates~\cite{Aadit2022}, we can concatenate the rule 110 gadget with some copy gates, ultimately forming
+By concatenating the rule 110 gadgets, we can construct a 2-dimensional TC that implements the rule 110 CA, as shown in \Cref{Surface-programmable-thermodynamic computer}.
+The gadget we constructed based on the Rule 110 CA naturally possesses Turing completeness. Therefore, this 2-dimensional TC is capable of universal computing.
 
 \subsection{Simulated Annealing}
 
@@ -720,6 +724,9 @@ However, solving the ground state from the non-deterministic direction is at lea
 
 \subsection{Computing by cooling}\label{local-cooling}
 
+\ym{
+    The material was orderly grown by slowly moving the temperature gradient in-plane~\cite{Zhang2014}. Tested thermal gradient force for grain boundary migration~\cite{Bai2015}.
+}
 We test the hypothesis: Cooling is easy if the process is from the
 deterministic direction, hard if the process is from the
 non-deterministic direction.
@@ -842,7 +849,7 @@ $n$ represents the width per single layer.
 \begin{figure}[h]
     \centering
     \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/numercial result.pdf}
-    \caption{Time v.s. Depth of the material}
+    \caption{Time v.s. Depth of the material\jinguo{show a comparison from right to left}\jinguo{I have already used D as the dimension}}
 \end{figure}
 
 Another numerical experiment are conducted to determine the time complexity of the computation along the input memory direction. 
