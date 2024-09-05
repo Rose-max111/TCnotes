@@ -67,13 +67,13 @@
 Improving the energy efficiency of computation is a major challenge in the development of future computing systems.
 The thermodynamic computer (TC)~\cite{conte2019thermodynamic} is a new type of computer that uses thermodynamics to perform computation.
 Instead of performing the computation deterministically, TCs are stochastic and are driven by thermodynamics.
-Physical implementations of TCs include DNA machines~\cite{tanaka2005design}, memristors~\cite{yang2013memristive, wang2017memristors, kumar2017chaotic, wang2018fully}, and Ising machines~\cite{gu2012encoding, lucas2014ising, mohseni2022ising, fabre2014optical}.
+Physical implementations of TCs include DNA machines~\cite{tanaka2005design} and Ising machines~\cite{gu2012encoding, lucas2014ising, mohseni2022ising, fabre2014optical}.
+% memristors~\cite{yang2013memristive, wang2017memristors, kumar2017chaotic, wang2018fully}, 
 
 The computational process of TCs utilizes the tendency of a physical system to evolve towards the state with the lowest free energy.
 By manipulating the minimum free energy state of the system, the computation can be performed.
 The change of free energy minimum state can be achieved by changing the distribution of the particles in the system, such as in the case of DNA machines~\cite{Feynman2018} or lowering the temperature of the system, such as in the case of Ising machines~\cite{boixo2013experimental}.
 The former is known as the Brownian machine, which evolves the system toward the direction of the entropy increase, while the latter are energy based, which evolves the system toward the direction of the energy decrease.
-\jinguo{What category are the memristors?} \ym{Memristors are energy based, which evolves the system toward the direction of the energy decrease.}
 
 Energy based models are probability one of the most powerful models for computation.
 The Ising model is not only capable of universal computation~\cite{gu2012encoding}, and it can be used to formulate many NP problems~\cite{lucas2014ising,mohseni2022ising}.
@@ -697,6 +697,7 @@ non-deterministic direction.
 \begin{hyp}
 Let $\mathcal{P}$ be a circuit SAT problem, and $\mathcal{E}$ be an energy modeling encoding of $\mathcal{P}$ (locally). There exists a subset of $\mathcal{E}$ that exhibits the overlap gap property~\cite{Gamarnik2021}.
 \end{hyp}
+\jinguo{Leave this issue to Maddie}
 The overlap gap property is a property for describing the algorithmic intractability in random structures, which is based on the topological disconnectivity property of the set of pair-wise distances of near optimal solutions.
 If the energy landscape of a optimization problem exhibits the overlap gap property, then it can not be solved by any local algorithms in polynomial time, including the simulated annealing method used in this work.
 The intuition comes from the energy model encoding of the identity circuit.
@@ -744,8 +745,6 @@ However, solving the ground state from the non-deterministic direction is at lea
 
 % The computing direction could be reversed by swaping the temperature of the heat sources connected in-surface and out-surface.
 % However, solving the ground state from the non-deterministic direction is at least as hard as solving the circuit satisfiability problem, which is NP-complete~\cite{Moore2011}.
-
-\subsection{Computing by cooling}\label{local-cooling}
 
 In our gadget, cooling from deterministic direction is from input to
 output, non-deterministic direction is from output to input. The latter
@@ -948,8 +947,9 @@ constraints are linear. The less constraints and equality constraints
 can be easily transformed into inequality constraints by adding ancilla
 variables.
 
-There is no solution with 4-atoms spin-glass that can satisfy the
-constraints. The minimum number of atoms required to satisfy the
+We set the $S_{\text{min}}$ to be the eight degenerate ground states of the spin-glass model to implement the $110$ rule.
+This is overly strict, as we do not consider the case that the ground states for different input signals to have degeneracy.
+The minimum number of atoms required to satisfy the
 constraints is 5. We set the target states to
 
 \begin{table}[H]
