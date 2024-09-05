@@ -129,8 +129,8 @@ Then we use numerical results in \Cref{sec:numerical-result} to show that if we 
 
 \section{Overview of the computation model}\label{sec:Overview-of-main-results}
 The TC we are proposing is shown in \Cref{Surface-programmable-thermodynamic computer}. It features a crystalline structure that encodes the time evolution of a universal CA that capable of performing universal computation.
-To encode a $D$-dimensional CA, we need a $D+1$-dimensional crystal. The extra dimension is used to encode the time-axis of the CA.
-For simplicity, we will focus on the 1D 110 rule elementary CA in the rest of this paper.
+To encode a $d$-dimensional CA, we need a $d+1$-dimensional crystal. The extra dimension is used to encode the time-axis of the CA.
+For simplicity, we will focus on the one dimensional 110 rule elementary CA in the rest of this paper.
 The physical implementation of the TC is based on the Ising model, where we use the spin up and down to encode the state $1$ and $0$ of the cellular automata, respectively. The energy of the Ising model is designed to be minimized when the spins are in the state that satisfies the rule 110 cellular automata, which can be achieved by constructing the rule 110 gadget shown in the inset of \Cref{Surface-programmable-thermodynamic computer}.
 
 \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
@@ -612,7 +612,7 @@ where $h_i$ is onsite energy, $J_{ij}$ is interaction energy and
 $s_i \in \{-1, 1\}$ is local spin. $s_i=1$ means spin-up and $s_i=-1$ means spin-down.
 
 Previous studies have shown that the Ising model is universal for computation~\cite{Aadit2022, onizawa2020design, camsari2017stochastic}, meaning that any logic circuit can be encoded into the Ising model and solved by finding the ground state of the Ising model. A universal set logic gate gadgets are designed, by concatenating which any logic circuit can be constructed.
-For example the logic expression $z = \neg (x \land y)$ can be encoded into the Ising model by the following Hamiltonian:
+For example the logic expression $z = \neg (a \land b)$ can be encoded into the Ising model by the following Hamiltonian:
 \begin{equation}
     \begin{split}
         H_{c = a \land b} &= s_a s_b -2 s_a s_c -2 s_bs_c + s_a + s_b -2 s_c\\
@@ -623,8 +623,8 @@ For example the logic expression $z = \neg (x \land y)$ can be encoded into the 
 where, the variable $c$ is an ancilla spin.
 A CA can be viewed as a translational invariant logic circuit, and thus can be encoded into the Ising model. The ground states of the Ising model encode the correspondence between the inputs and the outputs of the CA.
 Directly synthesizing the logic circuit for the universal $110$ rule (\Cref{eq:110rule}) requires at least 3 ancilla spins, which is far from optimal. By converting the gadget finding problem to a linear programming problem~\cite{Kolman1995}, we propose a provable optimal method to encode any CA rule into the Ising model, which is described in \Cref{sec:gadget-design}.
-The proposed gadget for the $110$ rule is shown in \Cref{Surface-programmable-thermodynamic computer}(b), which only requires 1 ancilla spin.
-The interaction energy and onsite energy of the rule 110 gadget are given below, where $p, q, r$ and inputs and $q'$ is the output in \Cref{Surface-programmable-thermodynamic computer}(b), respectively, while spin $A$ is the auxiliary spin.
+The proposed gadget for the $110$ rule is shown in \Cref{Surface-programmable-thermodynamic computer}, which only requires 1 ancilla spin.
+The interaction energy and onsite energy of the rule 110 gadget are given below, where $p, q, r$ and inputs and $q'$ is the output in \Cref{Surface-programmable-thermodynamic computer}, respectively, while spin $A$ is the auxiliary spin.
 \begin{equation}
 J = \begin{blockarray}{cccccc}
 & p & q & r & q^\prime & A\\
@@ -657,23 +657,23 @@ With the proposed Ising model, we are interested in how efficiently we can drive
 Since the natural cooling process is highly nontrivial to model, we consider a theoretical model for cooling, which is simulated annealing (SA)~\cite{Kirkpatrick1983}.
 \jinguo{random fluctuations may be linear in time considering the parallelism of the system.}
 It is known that when the system and heat bath are at thermal equilibrium, 
-the probability of a spin configuration $|\mathbf{s}\rangle$ is given by the Boltzmann distribution:
+the probability of a spin configuration $\mathbf{s}$ is given by the Boltzmann distribution:
 
 \jinguo{please do not use the ket bra notation}
 \begin{equation}
-    |\mathbf{s}\rangle = \frac{1}{Z}\exp\left(- \frac{E_{|\mathbf{s}\rangle}}{k_bT}\right)
+    \mathbf{s} = \frac{1}{Z}\exp\left(- \frac{E_{\mathbf{s}}}{k_bT}\right)
 \end{equation}
 
-where $Z = \sum_{|\mathbf{s}\rangle} \exp\left(-\frac{E_{|\mathbf{s}\rangle}}{k_bT}\right)$ is the partition function, 
-$E_{|\mathbf{s}\rangle}$ is the energy of the each of $2^n$ spin configuration, labeled by $|\mathbf{s}\rangle = |s_1, s_2, \cdots, s_n\rangle$, $k_b$ is the Boltzmann constant, and $T$ is the temperature of the heat bath. 
+where $Z = \sum_{\mathbf{s}} \exp\left(-\frac{E_{\mathbf{s}}}{k_bT}\right)$ is the partition function, 
+$E_{\mathbf{s}}$ is the energy of the each of $2^n$ spin configuration, labeled by $\mathbf{s} = (s_1, s_2, \cdots, s_n)$, $k_b$ is the Boltzmann constant, and $T$ is the temperature of the heat bath. 
 In the following, we set $k_b = 1$.
 
 We employ the Metropolis-Hastings algorithm~\cite{metropolis1953equation} to characterize the thermodynamic process of the TC system as modulated by the heat bath.
 This algorithm perform a random walk in the state space of the TC, each step we try to flip a spin,
-and the probability of accepting a move from state $|\mathbf{s}\rangle$ to $|\mathbf{s}^\prime\rangle$ is given by:
+and the probability of accepting a move from state $\mathbf{s}$ to $\mathbf{s}^\prime$ is given by:
 
 \begin{equation}
-    P_{\text{accept}} = \frac{1}{1+\exp\left(\frac{E_{|\mathbf{s}^\prime\rangle} - E_{|\mathbf{s}\rangle}}{T}\right)}
+    P_{\text{accept}} = \frac{1}{1+\exp\left(\frac{E_{\mathbf{s}^\prime} - E_{\mathbf{s}}}{T}\right)}
 \end{equation}
 
 This accepting probability follows from the glauber dynamics~\cite{glauber1963time}.
@@ -697,7 +697,7 @@ We focus here on the thermodynamics-driven approach to finding ground states, sp
 
 Due to the structure of the TC, we can allow only a portion of the system, rather than the entire system, to interact with the heat bath, while ignoring the interaction energy between the boundary spins and the exterior. After completing the heating-annealing procedure on one part of the system, we move the heat bath to another part and repeat the same process. This approach effectively finds a local ground state for each part of the system, which is reasonable when the global ground state can be divided into multiple local components.
 
-More specifically, the computation, progressing from the input layer to the output layer, involves the following steps: (1) Initialize the input layer configuration by adjusting the onsite energy for each spin. (2) Determine the number of layers $W$ that will interact with the external heat bath in each heating-annealing process. Group the layers in sets of $W$ from input to output, labeling them as groups $1, 2, \cdots, \frac{T}{W}$. The number of heating-annealing repetitions will then be $\frac{T}{W}$, where T is the total number of layers. (3) Perform the heating-annealing process on each group sequentially.
+More specifically, the computation, progressing from the input layer to the output layer, involves the following steps: (1) Initialize the input layer configuration by adjusting the onsite energy for each spin. (2) Determine the number of layers $W$ that will interact with the external heat bath in each heating-annealing process. Group the layers in sets of $W$ from input to output, labeling them as groups $1, 2, \cdots, \frac{D}{W}$. The number of heating-annealing repetitions will then be $\frac{D}{W}$, where D is the total number of layers. (3) Perform the heating-annealing process on each group sequentially.
 
 However, solving the ground state from the non-deterministic direction is at least as hard as solving the circuit satisfiability problem, which is NP-complete~\cite{Moore2011}.
 
@@ -756,15 +756,15 @@ The goal is to drive the the \textbf{state} to the one with lowest energy as fas
 
 Let us initially treat the heat bath as ideal, assuming that the temperature within the interacting region of the system is uniform and that the temperature outside this region is zero. We refer to the interacting region as the ``Heat Zone''.
 
-Assume there is an annealing procedure that may prevent the layers in the Heat Zone from stabilizing in the local ground state, or equivalently, that an error occurs in the computation process with a probability $\epsilon$. Repeating this procedure $\frac{T}{W}$ times would result in a probability of $(1-\epsilon)^{\frac{T}{W}}$ to successfully find the proper global ground state. To maintain a constant success probability as $T \rightarrow +\infty$, the error probability $\epsilon$ should scale as $\frac{W}{T}$.
+Assume there is an annealing procedure that may prevent the layers in the Heat Zone from stabilizing in the local ground state, or equivalently, that an error occurs in the computation process with a probability $\epsilon$. Repeating this procedure $\frac{D}{W}$ times would result in a probability of $(1-\epsilon)^{\frac{D}{W}}$ to successfully find the proper global ground state. To maintain a constant success probability as $D \rightarrow +\infty$, the error probability $\epsilon$ should scale as $\frac{W}{D}$.
 
 Now we turn to determining the annealing time $t_{th}$ required to achieve an error probability $\epsilon$ in each Heat Zone. Let $\lambda_1$ and $\lambda_2$ be the largest and second largest eigenvalues of the Markov transition matrix, respectively. The relationship between $\frac{\lambda_2}{\lambda_1}$ and $W$ can be expressed as $1 - \frac{\lambda_2}{\lambda_1} \sim e^{-W}$. Consequently, a relationship exists between $t_{th}$ and $\epsilon$, which is given by:
 
 \begin{equation}
-    \left( \frac{\lambda_2}{\lambda_1} \right) ^ {t_{th}} = \epsilon \rightarrow t_{th} \sim \ln(\frac{T}{W})e^{W}
+    \left( \frac{\lambda_2}{\lambda_1} \right) ^ {t_{th}} = \epsilon \rightarrow t_{th} \sim \ln(\frac{D}{W})e^{W}
 \end{equation}
 
-And the total annealing time scale as $\frac{T}{W}\ln(\frac{T}{W})e^W$.
+And the total annealing time scale as $\frac{D}{W}\ln(\frac{D}{W})e^W$.
 
 In practice, temperature changes cannot occur instantaneously, and the temperature distribution within the heating zone may not be uniform.
 Thus, we come up with a more realistic model for the block annealing process.
@@ -780,21 +780,22 @@ largest possible energy change when a spin is fliped.
 The effective heat zone should then be $[y-W, y]$, where position $y$ satisfying 
 $\exp(\frac{\Delta E_{max}}{T(y)}) = 0.1$ and $y<middle(t)$. Since the layers
 in fronts of the effective heat zone can only be fliped with a $\epsilon$ probability if the local energy would increase. 
-The effective width $W$ then should scale as $\exp(-\Delta E_{max} \Lambda^{cW}) \sim \epsilon \sim \frac{W}{T}$, where $c$ is the empirical constant for effective width and can be determined during the experiment. 
+The effective width $W$ then should scale as $\exp(-\Delta E_{max} \Lambda^{cW}) \sim \epsilon \sim \frac{W}{D}$, where $c$ is the empirical constant for effective width and can be determined during the experiment. 
 
 The total annealing time can be calculated as 
 
 \begin{equation}
-    t_{total} = \frac{T}{W}(\ln(\frac{T}{W}))^{1+ \frac{1}{c\ln(\Lambda)}}
+    \label{eq:total-annealing-time}
+    t_{total} = \frac{D}{W}(\ln(\frac{D}{W}))^{1+ \frac{1}{c\ln(\Lambda)}}
 \end{equation}
 
 \subsubsection{Estimation of the computing time along input memory direction}\label{Estimation-of-the-computing-time-along-input-memory-direction}
 
-We fixed the number of layers and denote $n$ as the width of each layer in this material.
+We fixed the number of layers and denote $S$ as the width of each layer in this material.
 
 However, we fail to derive an explicitly expression for the time complexity in this direction. 
-Numerical result shows that computing complexity is linear to $n$. Thus a total time
-for the computation should scale as $nm\log^{1 + \frac{1}{c\ln(\Lambda)}}(m)$ 
+Numerical result shows that computing complexity is linear to $S$. Thus a total time
+for the computation should scale as $DS\log^{1 + \frac{1}{c\ln(\Lambda)}}(D)$ 
 
 \subsubsection{Testing model with non-equilibrium simulated
 annealing}\label{some-details-about-non-equilibrium-simulated-annealing}
@@ -819,6 +820,7 @@ $\Delta E_{i}$ in field $i$ with temperature $T_i$. The
 probability to accept this flip would be
 
 \begin{equation}
+    \label{eq:non-equilibrium-SA}
 P = \frac{1}{1 + e^{\sum_i \frac{\Delta E_i}{T_i}}}
 \end{equation}
 
@@ -833,38 +835,60 @@ acceptance probability. We also provided a more general proof by constructing an
 
 Given that simulating a CA with a deep computational layer on the Ising model requires a large number of spins, making large-scale numerical simulations impractical, we opted to introduce a similar but simpler energy model to observe the behavior on a larger scale.
 
-Let us define a model Hamiltonian on a 2D lattice of size $S \times T$ as
+Denote $S$ to be the length of the material along the ``Space'' axis, $D$
+to be the length of the material along the ``Time'' axis. 
+Let us define a simpler but equivalent energy model on a 2D lattice of size $S \times D$, whose hamiltonian
+is given by
 \begin{equation}\label{eq:toy-hamiltonian}
-H = \sum_{t=1}^{T-1}\sum_{i=1}^{S} (n_{i+1, t} \land \neg(n_{i, t} \land \neg n_{i-1, t})) \veebar n_{i,t+1},
+H = \sum_{t=1}^{D-1}\sum_{i=1}^{S} (n_{i+1, t} \land \neg(n_{i, t} \land \neg n_{i-1, t})) \veebar n_{i,t+1},
 \end{equation}
+
 where $n_{i, t} \in \{0, 1\}$ is the state of the cell at row $i$ and column $t$, the boundary is periodic in the space direction, i.e. $n_{0, t} = n_{S, t}$.
-Its ground state with energy $0$ encodes a $110$ CA, where the direction of computation is from the left to right.
+Its ground state with energy $0$ also encodes a $110$ CA, where the direction of computation is from the left to right.
 \subsection{Numerical result}
 
-
-\ym{I will move this figure to AppendixB to show the equivalent 
-between heat bath and energy gradient. Another plot would be put here that
-show the TL v.s. $m\ln^{1+\frac{1}{c\ln(\Lambda)}}m$}
-We conducted numerical experiments both for energy-gradient and wave-packet scheme, under the condition
-$\Lambda = 1.3, n = 15$ , and fitted each sweep time against
-$m \log^2(m)$. Where $m$ represents the number of the single layers,
-$n$ represents the width per single layer.
+\jinguo{show a comparison from right to left}\jinguo{I have already used D as the dimension}
+\ym{Great, i will do this}
+Here we conducted numerical experiments to examine both the time complexity along the ``Space'' direction and the ``Time'' direction.
+We use binary search to determine the speed of the slowly moving heat bath at which
+the simulated annealing procedure would produce 
+a ground state configuration with $50\%$ probability. Denote this speed 
+as $v$, the simulated annealing procedure will then take $\frac{D}{v}$
+stages to complete the computation, each stage we try to flip a spin with 
+probability define in (\ref{eq:non-equilibrium-SA}). We name $\frac{D}{v}$ 
+as Sweep Time.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/numercial result.pdf}
-    \caption{Time v.s. Depth of the material\jinguo{show a comparison from right to left}\jinguo{I have already used D as the dimension}}
+    \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/MainNumericalResult.png}
+    \caption{Numerical Result}
+    \label{fig:main-numerical-result}
 \end{figure}
 
-Another numerical experiment is conducted to determine the time complexity of the computation along the input memory direction. 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/toymodel_time_vs_width.png}
-    \caption{Time v.s. width of the material}
-\end{figure}
-
-This indeed informs that the time scale along the memory direction is linear.
+[Fig. \ref{fig:main-numerical-result}(a)] shows the relationship between
+$\ln(\ln(D))$ and $\ln(\frac{\text{Sweep Time}}{D})$ shoule be linear, which implies 
+the time complexity along the ``Time'' direction should scale as $D\ln(D)^{f(\Lambda)}$. 
+We then fit the slopes of each line and $\frac{1}{\ln(\Lambda)}$ and find the 
+empirical constant $c$ in (\ref{eq:total-annealing-time}) to be $3$. [Fig. \ref{fig:main-numerical-result}(b)] shows 
+the the relationship between Sweep Time and $S$ should be linear. Combining these two results, 
+we can conclude that the time complexity should scales as $DS\log(D)^{1+\frac{1}{3\ln(\Lambda)}}$, 
+which is consistent with our theoretical prediction in (\ref{eq:total-annealing-time}).
+% \begin{figure}[h]
+%     \centering
+%     \begin{minipage}[b]{0.485\columnwidth}
+%         \centering
+%         \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/TimeComplexityalongTaxis.png}
+%         \caption{Time v.s. Depth of the material}
+%         \label{fig:image1}
+%     \end{minipage}
+%     \hspace{0.001\columnwidth} % 两张图片之间的水平间距
+%     \begin{minipage}[b]{0.485\columnwidth}
+%         \centering
+%         \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/toymodel_time_vs_width.png}
+%         \caption{Time v.s. width of the material}
+%         \label{fig:image2}
+%     \end{minipage}
+% \end{figure}
 
 \section{Physical implementation on Ising machine}\label{spin-glass}
 
