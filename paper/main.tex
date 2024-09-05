@@ -32,6 +32,8 @@
 \newcommand{\ym}[1]{[{\color{red}{YM: #1}}]}
 \newcommand{\s}{\mathbf {s}}
 \newcommand{\net}[1]{{\textsc{#1}}}
+\newcommand{\vs}{{\mathbf{s}}}
+\newcommand{\vn}{{\mathbf{n}}}
 \newcommand{\argmin}{\mathop{\mathrm{argmin}}\limits}
 \newcommand{\Eq}[1]{Eq.~(\ref{#1})}
 \newcommand{\Fig}[1]{Fig.~\ref{#1}}
@@ -65,7 +67,7 @@
 }
 
 Improving the energy efficiency of computation is a major challenge in the development of future computing systems.
-The thermodynamic computer (TC)~\cite{conte2019thermodynamic} is a new type of computer that uses thermodynamics to perform computation.
+The thermodynamic computer (TC)~\cite{conte2019thermodynamic, hylton2021vision} is a new type of computer that uses thermodynamics to perform computation.
 Instead of performing the computation deterministically, TCs are stochastic and are driven by thermodynamics.
 Physical implementations of TCs include DNA machines~\cite{tanaka2005design} and Ising machines~\cite{gu2012encoding, lucas2014ising, mohseni2022ising, fabre2014optical}.
 % memristors~\cite{yang2013memristive, wang2017memristors, kumar2017chaotic, wang2018fully}, 
@@ -605,7 +607,7 @@ where $q^\prime$ is the state of the center cell in the next generation.
 An $n$-vertex fully connected spin-glass Hamiltonian is described as follows.
 
 \begin{equation}
-H = \sum_{i < j} J_{ij}s_us_v + \sum_{i=1}^{n}h_i s_i
+E(\vs) = \sum_{i < j} J_{ij}s_us_v + \sum_{i=1}^{n}h_i s_i
 \end{equation}
 
 where $h_i$ is onsite energy, $J_{ij}$ is interaction energy and
@@ -615,9 +617,9 @@ Previous studies have shown that the Ising model is universal for computation~\c
 For example the logic expression $z = \neg (a \land b)$ can be encoded into the Ising model by the following Hamiltonian:
 \begin{equation}
     \begin{split}
-        H_{c = a \land b} &= s_a s_b -2 s_a s_c -2 s_bs_c + s_a + s_b -2 s_c\\
-        H_{z = \neg c} &= s_c s_z\\
-        H_{z = \neg (a \land b)} &= H_{z = \neg c} + H_{c = a \land b}
+        E_{c = a \land b} &= s_a s_b -2 s_a s_c -2 s_bs_c + s_a + s_b -2 s_c\\
+        E_{z = \neg c} &= s_c s_z\\
+        E_{z = \neg (a \land b)} &= E_{z = \neg c} + E_{c = a \land b}
     \end{split}
 \end{equation}
 where, the variable $c$ is an ancilla spin.
@@ -658,26 +660,21 @@ Since the natural cooling process is highly nontrivial to model, we consider a t
 \jinguo{random fluctuations may be linear in time considering the parallelism of the system.}
 It is known that when the system and heat bath are at thermal equilibrium, 
 the probability of a spin configuration $\mathbf{s}$ is given by the Boltzmann distribution:
-
-\jinguo{please do not use the ket bra notation}
 \begin{equation}
-    \mathbf{s} = \frac{1}{Z}\exp\left(- \frac{E_{\mathbf{s}}}{k_bT}\right)
+    p(\mathbf{s}) = \frac{1}{Z}\exp\left(- \frac{E({\mathbf{s}})}{k_bT}\right),
 \end{equation}
-
-where $Z = \sum_{\mathbf{s}} \exp\left(-\frac{E_{\mathbf{s}}}{k_bT}\right)$ is the partition function, 
-$E_{\mathbf{s}}$ is the energy of the each of $2^n$ spin configuration, labeled by $\mathbf{s} = (s_1, s_2, \cdots, s_n)$, $k_b$ is the Boltzmann constant, and $T$ is the temperature of the heat bath. 
+where $Z = \sum_{\mathbf{s}} \exp\left(-\frac{E({\mathbf{s}})}{k_bT}\right)$ is the partition function, 
+$E({\mathbf{s}})$ is the energy of the each of $2^n$ spin configuration, labeled by $\mathbf{s} = (s_1, s_2, \cdots, s_n)$, $k_b$ is the Boltzmann constant, and $T$ is the temperature of the heat bath. 
 In the following, we set $k_b = 1$.
 
 We employ the Metropolis-Hastings algorithm~\cite{metropolis1953equation} to characterize the thermodynamic process of the TC system as modulated by the heat bath.
 This algorithm perform a random walk in the state space of the TC, each step we try to flip a spin,
 and the probability of accepting a move from state $\mathbf{s}$ to $\mathbf{s}^\prime$ is given by:
-
 \begin{equation}
-    P_{\text{accept}} = \frac{1}{1+\exp\left(\frac{E_{\mathbf{s}^\prime} - E_{\mathbf{s}}}{T}\right)}
+    P_{\text{accept}} = \frac{1}{1+\exp\left(\frac{E({\mathbf{s}^\prime}) - E({\mathbf{s}})}{T}\right)}.
 \end{equation}
-
-This accepting probability follows from the glauber dynamics~\cite{glauber1963time}.
-It can be shown that this process is markovian and ergodic, and the system will eventually reach the thermal equilibrium.
+This accepting probability follows from the Glauber dynamics~\cite{glauber1963time}.
+It can be shown that this process is Markovian and ergodic, and the system will eventually reach the thermal equilibrium.
 To determine the speed of the convergence, we should notice the spectral gap of the transition matrix of the Markov chain, which is defined as
 
 \begin{equation}
@@ -840,7 +837,7 @@ to be the length of the material along the ``Time'' axis.
 Let us define a simpler but equivalent energy model on a 2D lattice of size $S \times D$, whose hamiltonian
 is given by
 \begin{equation}\label{eq:toy-hamiltonian}
-H = \sum_{t=1}^{D-1}\sum_{i=1}^{S} (n_{i+1, t} \land \neg(n_{i, t} \land \neg n_{i-1, t})) \veebar n_{i,t+1},
+E(\vn) = \sum_{t=1}^{D-1}\sum_{i=1}^{S} (n_{i+1, t} \land \neg(n_{i, t} \land \neg n_{i-1, t})) \veebar n_{i,t+1},
 \end{equation}
 
 where $n_{i, t} \in \{0, 1\}$ is the state of the cell at row $i$ and column $t$, the boundary is periodic in the space direction, i.e. $n_{0, t} = n_{S, t}$.
@@ -1024,7 +1021,7 @@ that $\Lambda = 1.3$ and $n=15$. The result is shown in [Fig. \ref{EGvsMHB}].
     \label{EGvsMHB}
 \end{figure}
 
-\section{The implmentation in Rydberg atoms array}\label{physical-model-rydberg-atoms-array}
+\section{The implementation in Rydberg atoms array}\label{physical-model-rydberg-atoms-array}
 Let us consider a Rydberg atoms array with a two dimensional embedding. The coordinate of the atom $v$ is denoted as $\mathbf{r}_v$.
 The Rydberg Hamiltonian~\cite{Nguyen2023} is defined as
 
