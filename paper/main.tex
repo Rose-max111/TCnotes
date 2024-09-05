@@ -687,6 +687,25 @@ To determine the speed of the convergence, we should notice the spectral gap of 
 where $\lambda_1$ and $\lambda_2$ are the largest and second largest eigenvalues of the transition matrix, respectively.
 In order to sample from the distribution $\epsilon$ close to the equilibrilium distribution, the number of steps required is $O(\log_{1-\Delta} \epsilon)$.
 
+\ym{
+    The material was orderly grown by slowly moving the temperature gradient in-plane~\cite{Zhang2014}. Tested thermal gradient force for grain boundary migration~\cite{Bai2015}.
+}
+We test the hypothesis: Cooling is easy if the process is from the
+deterministic direction, hard if the process is from the
+non-deterministic direction.
+
+\begin{hyp}
+Let $\mathcal{P}$ be a circuit SAT problem, and $\mathcal{E}$ be an energy modeling encoding of $\mathcal{P}$ (locally). There exists a subset of $\mathcal{E}$ that exhibits the overlap gap property~\cite{Gamarnik2021}.
+\end{hyp}
+The overlap gap property is a property for describing the algorithmic intractability in random structures, which is based on the topological disconnectivity property of the set of pair-wise distances of near optimal solutions.
+If the energy landscape of a optimization problem exhibits the overlap gap property, then it can not be solved by any local algorithms in polynomial time, including the simulated annealing method used in this work.
+The intuition comes from the energy model encoding of the identity circuit.
+Given a circuit with $n$ bits, the ground state degeneracy of the corresponding energy model is at least $2^n$.
+The energy model can be vertically stacked $n$ copy gadgets.
+Let the circuit depth be $d \sim 2^{\gamma \sqrt{n}}$ for some constant $\gamma > 0$.
+The Hamming distance between two degenerate ground states for different input signals is at least $d$, which is exponential to $n$. Let us define the size of the problem as $d\times n$, then this distance is clearly linear to the problem size. We left the rigorous proof of this hypothesis to mathematicians.
+
+
 \subsection{Cooling computation with a moving heat bath}\label{cooling-computation-with-moving-heat-bath}
 
 The computational process of the CA is divided into three steps: determining the state of each input cell, iteratively applying the transition rules to generate the next generation of cells, and identifying a certain generation of cells as the output. In fact, the width of the time axis in the Ising TC corresponds to the number of iterations. Hence, the smallest layer of spins on the time axis should be the input layer, and the largest layer of spins should be the output layer. 
@@ -727,24 +746,6 @@ However, solving the ground state from the non-deterministic direction is at lea
 % However, solving the ground state from the non-deterministic direction is at least as hard as solving the circuit satisfiability problem, which is NP-complete~\cite{Moore2011}.
 
 \subsection{Computing by cooling}\label{local-cooling}
-
-\ym{
-    The material was orderly grown by slowly moving the temperature gradient in-plane~\cite{Zhang2014}. Tested thermal gradient force for grain boundary migration~\cite{Bai2015}.
-}
-We test the hypothesis: Cooling is easy if the process is from the
-deterministic direction, hard if the process is from the
-non-deterministic direction.
-
-\begin{hyp}
-Let $\mathcal{P}$ be a circuit SAT problem, and $\mathcal{E}$ be an energy modeling encoding of $\mathcal{P}$ (locally). There exists a subset of $\mathcal{E}$ that exhibits the overlap gap property~\cite{Gamarnik2021}.
-\end{hyp}
-The overlap gap property is a property for describing the algorithmic intractability in random structures, which is based on the topological disconnectivity property of the set of pair-wise distances of near optimal solutions.
-If the energy landscape of a optimization problem exhibits the overlap gap property, then it can not be solved by any local algorithms in polynomial time, including the simulated annealing method used in this work.
-The intuition comes from the energy model encoding of the identity circuit.
-Given a circuit with $n$ bits, the ground state degeneracy of the corresponding energy model is at least $2^n$.
-The energy model can be vertically stacked $n$ copy gadgets.
-Let the circuit depth be $d \sim 2^{\gamma \sqrt{n}}$ for some constant $\gamma > 0$.
-The Hamming distance between two degenerate ground states for different input signals is at least $d$, which is exponential to $n$. Let us define the size of the problem as $d\times n$, then this distance is clearly linear to the problem size. We left the rigorous proof of this hypothesis to mathematicians.
 
 In our gadget, cooling from deterministic direction is from input to
 output, non-deterministic direction is from output to input. The latter
