@@ -832,41 +832,36 @@ acceptance probability. We also provided a more general proof by constructing an
 
 \section{Numerical simulation}\label{sec:numerical-result}
 
-\subsection{Energy model}\label{a-2d-surface-programmable-material}
-
-Given that simulating a CA with a deep computational layer on the Ising model requires a large number of spins, making large-scale numerical simulations impractical, we opted to introduce a similar but simpler energy model to observe the behavior on a larger scale.
-
-Denote $S$ to be the length of the material along the ``Space'' axis, $D$
-to be the length of the material along the ``Time'' axis. 
-Let us define a simpler but equivalent energy model on a 2D lattice of size $S \times D$, whose hamiltonian
+Given that simulating a CA with a deep computational layer on the Ising model requires many spins, making large-scale numerical simulations impractical, we opted to introduce a similar but simpler energy model to observe the behavior on a larger scale.
+Let us define a simpler but ``equivalent'' energy model on a 2D lattice of size $S \times D$, whose hamiltonian
 is given by
 \begin{equation}\label{eq:toy-hamiltonian}
 E(\vn) = \sum_{t=1}^{D-1}\sum_{i=1}^{S} (n_{i+1, t} \land \neg(n_{i, t} \land \neg n_{i-1, t})) \veebar n_{i,t+1},
 \end{equation}
-
-where $n_{i, t} \in \{0, 1\}$ is the state of the cell at row $i$ and column $t$, the boundary is periodic in the space direction, i.e. $n_{0, t} = n_{S, t}$.
-Its ground state with energy $0$ also encodes a $110$ CA, where the direction of computation is from the left to right.
-\subsection{Numerical result}
+where $n_{i, t} \in \{0, 1\}$ is the state of the cell at row $i$ and column $t$, the lattice is periodic in the space direction, i.e. $n_{0, t} = n_{S, t}$.
+%$S$ to be the length of the material along the ``Space'' axis, $D$
+%to be the length of the material along the ``Time'' axis. 
+%Its ground state with energy $0$ also encodes a $110$ CA, where the direction of computation is from the left to right.
 
 \jinguo{show a comparison from right to left}\jinguo{I have already used D as the dimension}
 \ym{Great, i will do this}
-Here we conducted numerical experiments to examine both the time complexity along the ``Space'' direction and the ``Time'' direction.
-We use binary search to determine the speed of the slowly moving heat bath at which
-the simulated annealing procedure would produce 
-a ground state configuration with $50\%$ probability. Denote this speed 
-as $v$, the simulated annealing procedure will then take $\frac{D}{v}$
-stages to complete the computation, each stage we try to flip a spin with 
-probability define in (\ref{eq:non-equilibrium-SA}). We name $\frac{D}{v}$ 
-as Sweep Time.
+
+Here we conducted numerical experiments to examine how the cooling time scales with (i)
+the ``Space'' dimension $S$, (ii) the ``Time'' dimension $D$, (iii) the ``Width'' of the heat zone $W$, and (iv) the temperature gradient $\Lambda$.
+We use the number of SA sweeps as the metric to measure the cooling time, which could be determined with the binary search.
+We keep changing the heat bath moving speed $v$ (in unit of columns/sweep) until the system can reach a ground state configuration with $\sim 50\%$ probability.
+Let us denote this speed as $v_c$, then the cooling time can be denoted as $\frac{D}{v_c}$.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/MainNumericalResult.png}
-    \caption{Numerical Result}
+    \caption{Numerical Result\jinguo{images should use the pdf format, the font size should be larger. Is it possible to verify that the Ising model is similar to the toy model? What is $T$ in the xlabel?}}
     \label{fig:main-numerical-result}
 \end{figure}
 
-[Fig. \ref{fig:main-numerical-result}(a)] shows the relationship between
+\jinguo{you need to explain the results... what can we learn from the results?}
+\jinguo{bad variable name: Sweep Time}
+\Cref{fig:main-numerical-result} (a) shows the relationship between
 $\ln(\ln(D))$ and $\ln(\frac{\text{Sweep Time}}{D})$ shoule be linear, which implies 
 the time complexity along the ``Time'' direction should scale as $D\ln(D)^{f(\Lambda)}$. 
 We then fit the slopes of each line and $\frac{1}{\ln(\Lambda)}$ and find the 
