@@ -774,6 +774,7 @@ The effective width $W$ then should scale as $\exp(-\Delta E_{max} \Lambda^{cW})
 The total annealing time can be calculated as 
 
 \begin{equation}
+    \label{eq:total-annealing-time}
     t_{total} = \frac{T}{W}(\ln(\frac{T}{W}))^{1+ \frac{1}{c\ln(\Lambda)}}
 \end{equation}
 
@@ -808,6 +809,7 @@ $\Delta E_{i}$ in field $i$ with temperature $T_i$. The
 probability to accept this flip would be
 
 \begin{equation}
+    \label{eq:non-equilibrium-SA}
 P = \frac{1}{1 + e^{\sum_i \frac{\Delta E_i}{T_i}}}
 \end{equation}
 
@@ -822,38 +824,58 @@ acceptance probability. We also provided a more general proof by constructing an
 
 Given that simulating a CA with a deep computational layer on the Ising model requires a large number of spins, making large-scale numerical simulations impractical, we opted to introduce a similar but simpler energy model to observe the behavior on a larger scale.
 
-Let us define a model Hamiltonian on a 2D lattice of size $S \times T$ as
+Denote $S$ to be the length of the material along the ``Space'' axis, $T$
+to be the length of the material along the ``Time'' axis. 
+Let us define a simpler but equivalent energy model on a 2D lattice of size $S \times T$, whose hamiltonian
+is given by
 \begin{equation}\label{eq:toy-hamiltonian}
 H = \sum_{t=1}^{T-1}\sum_{i=1}^{S} (n_{i+1, t} \land \neg(n_{i, t} \land \neg n_{i-1, t})) \veebar n_{i,t+1},
 \end{equation}
+
 where $n_{i, t} \in \{0, 1\}$ is the state of the cell at row $i$ and column $t$, the boundary is periodic in the space direction, i.e. $n_{0, t} = n_{S, t}$.
-Its ground state with energy $0$ encodes a $110$ CA, where the direction of computation is from the left to right.
+Its ground state with energy $0$ also encodes a $110$ CA, where the direction of computation is from the left to right.
 \subsection{Numerical result}
 
-
-\ym{I will move this figure to AppendixB to show the equivalent 
-between heat bath and energy gradient. Another plot would be put here that
-show the TL v.s. $m\ln^{1+\frac{1}{c\ln(\Lambda)}}m$}
-We conducted numerical experiments both for energy-gradient and wave-packet scheme, under the condition
-$\Lambda = 1.3, n = 15$ , and fitted each sweep time against
-$m \log^2(m)$. Where $m$ represents the number of the single layers,
-$n$ represents the width per single layer.
+Here we conducted numerical experiments to examine both the time complexity along the ``Space'' direction and the ``Time'' direction.
+We use binary search to determine the speed of the slowly moving heat bath at which
+the simulated annealing procedure would produce 
+a ground state configuration with $50\%$ probability. Denote this speed 
+as $v$, the simulated annealing procedure will then take $\frac{T}{v}$
+stages to complete the computation, each stage we try to flip a spin with 
+probability define in (\ref{eq:non-equilibrium-SA}). We name $\frac{T}{v}$ 
+as Sweep Time.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/numercial result.pdf}
-    \caption{Time v.s. Depth of the material}
+    \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/MainNumericalResult.png}
+    \caption{Numerical Result}
+    \label{fig:main-numerical-result}
 \end{figure}
 
-Another numerical experiment are conducted to determine the time complexity of the computation along the input memory direction. 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/toymodel_time_vs_width.png}
-    \caption{Time v.s. width of the material}
-\end{figure}
-
-This indeed informs that the time scale along the memory direction is linear.
+[Fig. \ref{fig:main-numerical-result}(a)] shows the relationship between
+$\ln(\ln(T))$ and $\ln(\frac{\text{Sweep Time}}{T})$ shoule be linear, which implies 
+the time complexity along the ``Time'' direction should scale as $T\ln(T)^{f(\Lambda)}$. 
+We then fit the slopes of each line and $\frac{1}{\ln(\Lambda)}$ and find the 
+empirical constant $c$ in (\ref{eq:total-annealing-time}) to be $3$. [Fig. \ref{fig:main-numerical-result}(b)] shows 
+the the relationship between Sweep Time and $S$ should be linear. Combining these two results, 
+we can conclude that the time complexity should scales as $TS\log(T)^{1+\frac{1}{3\ln(\Lambda)}}$, 
+which is consistent with our theoretical prediction in (\ref{eq:total-annealing-time}).
+% \begin{figure}[h]
+%     \centering
+%     \begin{minipage}[b]{0.485\columnwidth}
+%         \centering
+%         \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/TimeComplexityalongTaxis.png}
+%         \caption{Time v.s. Depth of the material}
+%         \label{fig:image1}
+%     \end{minipage}
+%     \hspace{0.001\columnwidth} % 两张图片之间的水平间距
+%     \begin{minipage}[b]{0.485\columnwidth}
+%         \centering
+%         \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/toymodel_time_vs_width.png}
+%         \caption{Time v.s. width of the material}
+%         \label{fig:image2}
+%     \end{minipage}
+% \end{figure}
 
 \section{Physical implementation on Ising machine}\label{spin-glass}
 
