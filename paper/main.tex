@@ -622,7 +622,7 @@ For example the logic expression $z = \neg (x \land y)$ can be encoded into the 
 \end{equation}
 where, the variable $c$ is an ancilla spin.
 A CA can be viewed as a translational invariant logic circuit, and thus can be encoded into the Ising model. The ground states of the Ising model encode the correspondence between the inputs and the outputs of the CA.
-Directly synthesizing the logic circuit for the universal $110$ rule (\Cref{eq:110rule}) requires at least 3 ancilla spins, which is far from optimal. By converting the gadget finding problem to a linear programming problem~\cite{}, we propose a provable optimal method to encode any CA rule into the Ising model, which is described in \Cref{sec:gadget-design}.
+Directly synthesizing the logic circuit for the universal $110$ rule (\Cref{eq:110rule}) requires at least 3 ancilla spins, which is far from optimal. By converting the gadget finding problem to a linear programming problem~\cite{Kolman1995}, we propose a provable optimal method to encode any CA rule into the Ising model, which is described in \Cref{sec:gadget-design}.
 The proposed gadget for the $110$ rule is shown in \Cref{Surface-programmable-thermodynamic computer}(b), which only requires 1 ancilla spin.
 The interaction energy and onsite energy of the rule 110 gadget are given below, where $p, q, r$ and inputs and $q'$ is the output in \Cref{Surface-programmable-thermodynamic computer}(b), respectively, while spin $A$ is the auxiliary spin.
 \begin{equation}
@@ -653,9 +653,13 @@ The gadget we constructed based on the Rule 110 CA naturally possesses Turing co
 
 \subsection{Simulated Annealing}
 
+With the proposed Ising model, we are interested in how efficiently we can drive the system to the ground state, which encodes the output of the CA.
+Since the natural cooling process is highly nontrivial to model, we consider a theoretical model for cooling, which is simulated annealing (SA)~\cite{Kirkpatrick1983}.
+\jinguo{random fluctuations may be linear in time considering the parallelism of the system.}
 It is known that when the system and heat bath are at thermal equilibrium, 
 the probability of a spin configuration $|\mathbf{s}\rangle$ is given by the Boltzmann distribution:
 
+\jinguo{please do not use the ket bra notation}
 \begin{equation}
     |\mathbf{s}\rangle = \frac{1}{Z}\exp\left(- \frac{E_{|\mathbf{s}\rangle}}{k_bT}\right)
 \end{equation}
