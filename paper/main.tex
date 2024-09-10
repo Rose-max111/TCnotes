@@ -165,9 +165,9 @@ color(100bp)=(transparent!80) }
     % 绘制 Y 轴
     \draw[->][line width=1.5pt] (257,315) -- (257,45.4) node[anchor=south east] {};
     % \node at (358.3, 306) [anchor=north] {$Time$};
-    \draw (358.3,320) node [anchor=north][inner sep=0.75pt]   [align=left] {${Time}$};
+    % \draw (358.3,320) node [anchor=north][inner sep=0.75pt]   [align=left] {${Time}$};
     % \node at (252, 175.7) [anchor=east] {$Space$};
-    \draw (215,175.7) node [anchor=west][inner sep=0.75pt]   [align=left] {${Space}$};
+    % \draw (215,175.7) node [anchor=west][inner sep=0.75pt]   [align=left] {${Space}$};
     %Rounded Rect [id:dp5816101232993451] 
     \path  [shading=_qxg3a7xt1,_ue4dovf1e,path fading= _htcz8osfa ,fading transform={xshift=2}] (281.6,76.28) .. controls (281.6,66.96) and (289.16,59.4) .. (298.48,59.4) -- (349.12,59.4) .. controls (358.44,59.4) and (366,66.96) .. (366,76.28) -- (366,274.52) .. controls (366,283.84) and (358.44,291.4) .. (349.12,291.4) -- (298.48,291.4) .. controls (289.16,291.4) and (281.6,283.84) .. (281.6,274.52) -- cycle ; % for fading 
      % \draw   (281.6,76.28) .. controls (281.6,66.96) and (289.16,59.4) .. (298.48,59.4) -- (349.12,59.4) .. controls (358.44,59.4) and (366,66.96) .. (366,76.28) -- (366,274.52) .. controls (366,283.84) and (358.44,291.4) .. (349.12,291.4) -- (298.48,291.4) .. controls (289.16,291.4) and (281.6,283.84) .. (281.6,274.52) -- cycle ; % for border 
@@ -539,10 +539,6 @@ color(100bp)=(transparent!80) }
     % Text Node
     \draw (292,45) node [anchor=north west][inner sep=0.75pt]   [align=left] {${Heat\ Zone}$};
     % Text Node
-    %\draw (220.87,45.67) node [anchor=north west][inner sep=3pt]   [align=left] {\large {$\displaystyle \mathtt{(a)}$}};
-    % Text Node
-    %\draw (490.67,121.47) node [anchor=north west][inner sep=3pt]   [align=left] {\large {$\displaystyle \mathtt{(b)}$}};
-    % Text Node
     \draw (492.00,150.41) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\tiny {$p$}}};
     % Text Node
     \draw (479.75,168.95) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\tiny {$q$}}};
@@ -559,7 +555,38 @@ color(100bp)=(transparent!80) }
     % Text Node
     \draw (319.33,63.67) node [anchor=north west][inner sep=0.75pt]   [align=left] {$\displaystyle v$};
     % Text Node
-    \draw (306.20,298.47) node [anchor=north west][inner sep=0.75pt]   [align=left] {$\displaystyle Width$};
+    \draw (317.20,298.47) node [anchor=north west][inner sep=0.75pt]   [align=left] {$W$};
+    % Text Node
+    \draw (448.3,323) node [anchor=north][inner sep=0.75pt]   [align=left] {${M}$};
+    \draw (448.3, 320) -- (448.3, 315);
+    \draw (406.8,323) node [anchor=north][inner sep=0.75pt]   [align=left] {${M-1}$};
+    \draw (408.3, 320) -- (408.3, 315);
+
+    \draw (375.3,327) node [anchor=north][inner sep=0.75pt]   [align=left] {${\cdots}$};
+
+    \draw (354.3,323) node [anchor=north][inner sep=0.75pt]   [align=left] {${3}$};
+    \draw (354.3, 320) -- (354.3, 315);
+    \draw (314.3,323) node [anchor=north][inner sep=0.75pt]   [align=left] {${2}$};
+    \draw (314.3, 320) -- (314.3, 315);
+    \draw (274.3,323) node [anchor=north][inner sep=0.75pt]   [align=left] {${1}$};
+    \draw (274.3, 320) -- (274.3, 315);
+
+    % \node at (252, 175.7) [anchor=east] {$Space$};
+    \draw (240,83.7) node [anchor=west][inner sep=0.75pt]   [align=left] {${N}$};
+    \draw (253,83.7) -- (258, 83.7);
+    \draw (220,113.7) node [anchor=west][inner sep=0.75pt]   [align=left] {${N-1}$};
+    \draw (253,113.7) -- (258, 113.7);
+    \draw (220,143.7) node [anchor=west][inner sep=0.75pt]   [align=left] {${N-2}$};
+    \draw (253,143.7) -- (258, 143.7);
+    \draw (220,173.7) node [anchor=west][inner sep=0.75pt]   [align=left] {${N-3}$};
+    \draw (253,173.7) -- (258, 173.7);
+
+    \draw (245,194.7) node [anchor=north][inner sep=0.75pt]   [align=left] {${\vdots}$};
+
+    \draw (240,243.7) node [anchor=west][inner sep=0.75pt]   [align=left] {${2}$};
+    \draw (253,243.7) -- (258, 243.7);
+    \draw (240,273.7) node [anchor=west][inner sep=0.75pt]   [align=left] {${1}$};
+    \draw (253,273.7) -- (258, 273.7);
 
     
     \end{tikzpicture}
@@ -567,7 +594,10 @@ color(100bp)=(transparent!80) }
     while the horizontal direction is the time axis.
     The computation is done by moving the heat zone (orange colored area) from the input surface (left) to the output surface (right) slowly with a constant speed $v$.
     The TC has a translational invariant structure, and each unit cell (inset) is a $110$ rule cellular automata gadget that consists of 5 mutually correlated spins (white circles).
-    \jinguo{please add symbols for space, time and width}}
+    % \jinguo{please add symbols for space, time and width}
+    \ym{I add symbols. please check if i still need to put original captions here}
+    }
+    
     \label{Surface-programmable-thermodynamic computer}
 \end{figure}
 
@@ -653,7 +683,7 @@ A & 5\\
 By concatenating the rule 110 gadgets, we can construct a 2-dimensional TC that implements the rule 110 CA, as shown in \Cref{Surface-programmable-thermodynamic computer}.
 The gadget we constructed based on the Rule 110 CA naturally possesses Turing completeness. Therefore, this 2-dimensional TC is capable of universal computing.
 
-\subsection{Simulated Annealing}
+\subsection{Simulated Annealing}\label{simulated-annealing-algorithm}
 
 With the proposed Ising model, we are interested in how efficiently we can drive the system to the ground state, which encodes the output of the CA.
 Since the natural cooling process is highly nontrivial to model, we consider a theoretical model for cooling, which is simulated annealing (SA)~\cite{Kirkpatrick1983}.
@@ -704,22 +734,24 @@ Let the circuit depth be $d \sim 2^{\gamma \sqrt{n}}$ for some constant $\gamma 
 The Hamming distance between two degenerate ground states for different input signals is at least $d$, which is exponential to $n$. Let us define the size of the problem as $d\times n$, then this distance is clearly linear to the problem size. We left the rigorous proof of this hypothesis to mathematicians.
 
 
-\subsection{Cooling computation with a moving heat bath}\label{cooling-computation-with-moving-heat-bath}
+\subsection{Cooling computation with an idealized heat bath}\label{cooling-computation-with-moving-heat-bath}
 
 \jinguo{
     Need to introduce the heat zone.
 }
 
-The computational process of the CA is divided into three steps: determining the state of each input cell, iteratively applying the transition rules to generate the next generation of cells, and identifying a certain generation of cells as the output. In fact, the width of the time axis in the Ising TC corresponds to the number of iterations. Hence, the smallest layer of spins on the time axis should be the input layer, and the largest layer of spins should be the output layer. 
 
-Given that each ground state of the TC corresponds to a valid computational process of the CA for a given input, the computational process of the TC is essentially reduced to finding the ground state of the TC with the spin configuration in the input layers fixed.
+The computational process of the TC is equivalent to finding the ground state of the TC with the spin configuration in the left surface being fixed.
 
-We focus here on the thermodynamics-driven approach to finding ground states, specifically the heating-annealing method. This involves gradually increasing and then decreasing the temperature of the heat bath with which the TC interacts. The TC may employ heat fluctuations to explore a state space in the first stage and stabilize on ground state during the second stage as long as the annealing stage is long enough. However, it is convinced that this stage can last for exponential time for some hard spin-glass problems.
+We focus here on the thermodynamics-driven approach to finding ground states, 
+specifically the simulated annealing method. This can be seen as the TC interacting with a heat bath, 
+as shown in \ref{simulated-annealing-algorithm}, by gradually decreasing the temperature
+of the heat bath the TC can be driven to the ground state if the temperature is decreased slowly enough.
+However, the cooling process can last for exponential time for some hard spin-glass problems.
 
-Due to the structure of the TC, we can allow only a portion of the system, rather than the entire system, to interact with the heat bath, while ignoring the interaction energy between the boundary spins and the exterior. After completing the heating-annealing procedure on one part of the system, we move the heat bath to another part and repeat the same process. This approach effectively finds a local ground state for each part of the system, which is reasonable when the global ground state can be divided into multiple local components.
-
-More specifically, the computation, progressing from the input layer to the output layer, involves the following steps: (1) Initialize the input layer configuration by adjusting the onsite energy for each spin. (2) Determine the number of layers $W$ that will interact with the external heat bath in each heating-annealing process. Group the layers in sets of $W$ from input to output, labeling them as groups $1, 2, \cdots, \frac{D}{W}$. The number of heating-annealing repetitions will then be $\frac{D}{W}$, where D is the total number of layers. (3) Perform the heating-annealing process on each group sequentially.
-
+We modify the classical simulated annealing (SA) algorithm by introducing a heat zone of width  W , which represents the region of the system that interacts with the heat bath.
+To find the ground state of the system, we devided the system into $\lceil\frac{T}{W}\rceil$ parts
+where part $i$ consists of the spins in the region $[iW, (i+1)W]$.
 However, solving the ground state from the non-deterministic direction is at least as hard as solving the circuit satisfiability problem, which is NP-complete~\cite{Moore2011}.
 
 % \subsection{Cooling computation with direction}\label{sec:direction}
