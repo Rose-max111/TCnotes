@@ -715,9 +715,11 @@ To determine the speed of the convergence, we should notice the spectral gap of 
 where $\lambda_1$ and $\lambda_2$ are the largest and second largest eigenvalues of the transition matrix, respectively.
 In order to sample from the distribution $\epsilon$ close to the equilibrilium distribution, the number of steps required is $O(\log_{1-\Delta} \epsilon)$.
 
-\ym{
-    The material was orderly grown by slowly moving the temperature gradient in-plane~\cite{Zhang2014}. Tested thermal gradient force for grain boundary migration~\cite{Bai2015}.
-}
+In the following article, denote one sweep as the process of trying to flip each spin at its local temperature.
+
+% \ym{
+%     The material was orderly grown by slowly moving the temperature gradient in-plane~\cite{Zhang2014}. Tested thermal gradient force for grain boundary migration~\cite{Bai2015}.
+% }
 We test the hypothesis: Cooling is easy if the process is from the
 deterministic direction, hard if the process is from the
 non-deterministic direction.
@@ -740,96 +742,94 @@ The Hamming distance between two degenerate ground states for different input si
 \jinguo{
     Need to introduce the heat zone.
 }
+\ym{
+    I tried. Please check if it is clear and if i still need to cut some details off.
+}
 
 
 The computational process of the TC is equivalent to finding the ground state of the TC with the spin configuration in the left surface being fixed.
 
 We focus here on the thermodynamics-driven approach to finding ground states, 
-specifically the simulated annealing method. This can be seen as the TC interacting with a heat bath, 
-as shown in \ref{simulated-annealing-algorithm}, by gradually decreasing the temperature
+specifically the simulated annealing (SA) method. Traditional SA method can be seen as the whole system interacting with a heat bath, by gradually decreasing the temperature
 of the heat bath the TC can be driven to the ground state if the temperature is decreased slowly enough.
 However, the cooling process can last for exponential time for some hard spin-glass problems.
 
-We modify the classical simulated annealing (SA) algorithm by introducing a heat zone of width  W , which represents the region of the system that interacts with the heat bath.
-To find the ground state of the system, we devided the system into $\lceil\frac{T}{W}\rceil$ parts
-where part $i$ consists of the spins in the region $[iW, (i+1)W]$.
-However, solving the ground state from the non-deterministic direction is at least as hard as solving the circuit satisfiability problem, which is NP-complete~\cite{Moore2011}.
+We introduce a heat zone of width $W$, which represents the region of the system that interacts with the heat bath, as shown in \Cref{Surface-programmable-thermodynamic computer}.
+Let layer $i$ be defined as the set of spins with x-coordinate $i$.
+The system is devided into $\lceil\frac{M}{W}\rceil$ parts,
+where part $j$ consists of layers in the range $[jW, (j+1)W-1]$.
+The system can then be cooled by sequentially cooling each parts with an idealized heat bath, 
+which maintains a space-invariant temperature within the heat zone while keeping other regions at zero temperature.
+To drive the system toward the ground state, the cooling order should proceed from left to right
+, corresponding to the computation direction of the cellular automata.
 
-% \subsection{Cooling computation with direction}\label{sec:direction}
+Assume the annealing procedure in each part has an error probability $\epsilon$ that prevents at least one layer
+from reaching the local ground state. 
+Repeating the procedure $\frac{M}{W}$ times results in a success probability of $(1 - \epsilon)^{\frac{M}{W}}$ for finding the global ground state. 
+To keep this probability constant as $M \to \infty$, the error probability $\epsilon$ should scale as $\frac{W}{M}$.
 
-% Definitions: * \emph{in-surface/out-suface}: The surface of a surface
-% programmable material that associated with the input/output of the logic
-% circuit.
 
-% The process of heating and annealing the entire material does not have computational capability, as the system lacks logical directionality.
-
-% Logical directionality needs to be introduced through an orderly annealing method. 
-% Similar to the localized heating-annealing approach that catalyzes the growth of ordered crystals, we introduced a temperature gradient annealing scheme.
-
-% More specifically, the computation, with computing direction from in-surface to out-surface, contains the following steps: (1). Initialize the in-surface configuration. By removing
-% some atoms on the in-surface. (2). Connect the in-surface/out-surface to
-% external heat sources at temperature $T_1 < T_2$, respectively. We
-% also require that the energy gap between the ground state and the first
-% excited state of the Hamiltonian to be $\Delta E< T_1$. (3). Lower the
-% temperature of the heat sources ``slowly'' to cool the system to the
-% ground state of the Hamiltonian. The temperature of the heat sources at
-% time $t$ is $T_{1/2}(t) = T_{1/2}(0)\lambda^{-c t}$, where
-% $T_{1/2}(0)$ is the initial temperature of the heat sources, and
-% $\alpha$ is a constant.
-
-% The computing direction could be reversed by swaping the temperature of the heat sources connected in-surface and out-surface.
-% However, solving the ground state from the non-deterministic direction is at least as hard as solving the circuit satisfiability problem, which is NP-complete~\cite{Moore2011}.
-
-In our gadget, cooling from deterministic direction is from input to
-output, non-deterministic direction is from output to input. The latter
-one must be non-deterministic because this gadget is Turing-Complete.
-
-The goal is to drive the the \textbf{state} to the one with lowest energy as fast as possible, while some bits set to be 1 or 0 in the \textbf{state}.
-
-\subsubsection{Estimation of the computing time along computation direction}\label{estimation-of-the-computing-time}
-
-Let us initially treat the heat bath as ideal, assuming that the temperature within the interacting region of the system is uniform and that the temperature outside this region is zero. We refer to the interacting region as the ``Heat Zone''.
-
-Assume there is an annealing procedure that may prevent the layers in the Heat Zone from stabilizing in the local ground state, or equivalently, that an error occurs in the computation process with a probability $\epsilon$. Repeating this procedure $\frac{D}{W}$ times would result in a probability of $(1-\epsilon)^{\frac{D}{W}}$ to successfully find the proper global ground state. To maintain a constant success probability as $D \rightarrow +\infty$, the error probability $\epsilon$ should scale as $\frac{W}{D}$.
-
-Now we turn to determining the annealing time $t_{th}$ required to achieve an error probability $\epsilon$ in each Heat Zone. Let $\lambda_1$ and $\lambda_2$ be the largest and second largest eigenvalues of the Markov transition matrix, respectively. The relationship between $\frac{\lambda_2}{\lambda_1}$ and $W$ can be expressed as $1 - \frac{\lambda_2}{\lambda_1} \sim e^{-W}$. Consequently, a relationship exists between $t_{th}$ and $\epsilon$, which is given by:
-
+Now we turn to determining the sweep time $t_{th}$ required to achieve an error probability $\epsilon$ in each part. 
+Let $\lambda_1$ and $\lambda_2$ be the largest and second largest eigenvalues of the Markov transition matrix, respectively. 
+The relationship between $\frac{\lambda_2}{\lambda_1}$ and $W$ can be expressed as
 \begin{equation}
-    \left( \frac{\lambda_2}{\lambda_1} \right) ^ {t_{th}} = \epsilon \rightarrow t_{th} \sim \ln(\frac{D}{W})e^{W}
+    \label{eq:spectral-gap}
+    1 - \frac{\lambda_2}{\lambda_1} \sim e^{-W}
 \end{equation}
 
-And the total annealing time scale as $\frac{D}{W}\ln(\frac{D}{W})e^W$.
+Consequently, a relationship exists between $t_{th}$ and $\epsilon$, which is given by:
+
+\begin{equation}
+    \left( \frac{\lambda_2}{\lambda_1} \right) ^ {t_{th}} = \epsilon \rightarrow t_{th} \sim \ln(\frac{M}{W})e^{W}
+\end{equation}
+
+And the total sweep time scale as $\frac{M}{W}\ln(\frac{M}{W})e^W$.
+
+% However, solving the ground state from the non-deterministic direction is at least as hard as solving the circuit satisfiability problem, which is NP-complete~\cite{Moore2011}.
+
+% In our gadget, cooling from deterministic direction is from input to
+% output, non-deterministic direction is from output to input. The latter
+% one must be non-deterministic because this gadget is Turing-Complete.
+
+% The goal is to drive the the \textbf{state} to the one with lowest energy as fast as possible, while some bits set to be 1 or 0 in the \textbf{state}.
+
+\subsection{Cooling computation with a realistic heat bath}\label{estimation-of-the-computing-time}
 
 In practice, temperature changes cannot occur instantaneously, and the temperature distribution within the heating zone may not be uniform.
 Thus, we come up with a more realistic model for the block annealing process.
 
-Now suppose the heat bath only connects to a small rectangle region of the system,
-covers the region encompassing all time coordinates between $[middle(t)-\frac{\Delta_L}{2}, middle(t)+\frac{\Delta_L}{2}]$, where $\Delta_L$ is a small constant.
-The heat radiation is conducted to other regions, thereby inducing a temperature gradient,
-which can be modeled as $T(x) \propto \Lambda^{-|x - middle(t)|}$, where $T(x)$ is the temperature at the region with a time coordinate $x$, and $\Lambda$ is a constant.
+Now suppose the heat bath only connects to a small rectangle region of the system, creating a temperature gradient through heat flux,
+The temperature $T(x, t)$  at a position with x-coordinate  $x$  and time  $t$  can be modeled as  $T(x, t) \propto \Lambda^{-|x - L(t)|}$ , 
+where $\Lambda$ is a heat flux constant and $L(t)$ denotes the center of the heat bath at time $t$.
 
-The block annealing process then can be reconstruct as slowly moving
-the middle of the heat bath from one end to the other. Defining $\Delta E_{max}$ to be the
+The block annealing process then can be reconstruct as moving
+the heat bath from the left surface to the right surface at speed $v$. Defining $\Delta E_{max}$ to be the
 largest possible energy change when a spin is fliped.
-The effective heat zone should then be $[y-W, y]$, where position $y$ satisfying 
-$\exp(\frac{\Delta E_{max}}{T(y)}) = 0.1$ and $y<middle(t)$. Since the layers
+The effective heat zone with width $W'$ should then be $[y-W', y]$, where position $y$ satisfying 
+$\exp(\frac{\Delta E_{max}}{T(y)}) = 0.1$ and $y<L(t)$. Since the layers
 in fronts of the effective heat zone can only be fliped with a $\epsilon$ probability if the local energy would increase. 
-The effective width $W$ then should scale as $\exp(-\Delta E_{max} \Lambda^{cW}) \sim \epsilon \sim \frac{W}{D}$, where $c$ is the empirical constant for effective width and can be determined during the experiment. 
+The effective width $W'$ then should scale as $\exp(-\Delta E_{max} \Lambda^{cW'}) \sim \epsilon \sim \frac{W'}{M}$, where $c$ is an empirical constant for effective width and can be determined during the experiment. 
+\ym{I am not sure about how to give a concrete definition of the effective width $W'$.}
 
-The total annealing time can be calculated as 
+The total sweep time with a fixed inputs size $N$ can be calculated as 
 
 \begin{equation}
     \label{eq:total-annealing-time}
-    t_{total} = \frac{D}{W}(\ln(\frac{D}{W}))^{1+ \frac{1}{c\ln(\Lambda)}}
+    t_{total} \propto \frac{M}{W'}(\ln(\frac{M}{W'}))^{1+ \frac{1}{c\ln(\Lambda)}}
 \end{equation}
 
-\subsubsection{Estimation of the computing time along input memory direction}\label{Estimation-of-the-computing-time-along-input-memory-direction}
+To determine the relationship between the total annealing time and the input size $N$, we should
+further discuss the relationship between the spectral gap given in  \Cref{eq:spectral-gap} and inputs size $N$.
+However, we failed to find a direct relationship.
+Numerical result shows that computing complexity is linear to $N$. Thus a total sweep time
+for the computation should scale as $NM\log^{1 + \frac{1}{c\ln(\Lambda)}}(M)$.
+\ym{Please help me to think about how to evaluate the time complexity while $N$ increases.} 
+The moving speed $v$ can be then calculated as
 
-We fixed the number of layers and denote $S$ as the width of each layer in this material.
-
-However, we fail to derive an explicitly expression for the time complexity in this direction. 
-Numerical result shows that computing complexity is linear to $S$. Thus a total time
-for the computation should scale as $DS\log^{1 + \frac{1}{c\ln(\Lambda)}}(D)$ 
+\begin{equation}
+    \label{eq:moving-speed}
+    v \propto \frac{t_{total}}{M} = N\log^{1 + \frac{1}{c\ln(\Lambda)}}(M)
+\end{equation}
 
 \subsubsection{Testing model with non-equilibrium simulated
 annealing}\label{some-details-about-non-equilibrium-simulated-annealing}
@@ -860,52 +860,56 @@ P = \frac{1}{1 + e^{\sum_i \frac{\Delta E_i}{T_i}}}
 
 It is easily to observe that when the system returns to
 heat-equilibrium, the probability reverts to the classical HeatBath
-acceptance probability. We also provided a more general proof by constructing another equivalent model in Appendix \ref{proof-of_non-equilibrium-SA}.
+acceptance probability. We also provided a more general proof by constructing another equivalent model in \Cref{proof-of_non-equilibrium-SA}.
 
 
 \section{Numerical simulation}\label{sec:numerical-result}
 
 Given that simulating a CA with a deep computational layer on the Ising model requires many spins, making large-scale numerical simulations impractical, we opted to introduce a similar but simpler energy model to observe the behavior on a larger scale.
-Let us define a simpler but ``equivalent'' energy model on a 2D lattice of size $S \times D$, whose hamiltonian
+Let us define a simpler but ``equivalent'' energy model on a 2D lattice of size $N \times M$, whose hamiltonian
 is given by
 \begin{equation}\label{eq:toy-hamiltonian}
-E(\vn) = \sum_{t=1}^{D-1}\sum_{i=1}^{S} (n_{i+1, t} \land \neg(n_{i, t} \land \neg n_{i-1, t})) \veebar n_{i,t+1},
+E(\vn) = \sum_{j=1}^{M-1}\sum_{i=1}^{N} (n_{i+1, j} \land \neg(n_{i, j} \land \neg n_{i-1, j})) \veebar n_{i,j+1},
 \end{equation}
-where $n_{i, t} \in \{0, 1\}$ is the state of the cell at row $i$ and column $t$, the lattice is periodic in the space direction, i.e. $n_{0, t} = n_{S, t}$.
+where $n_{i, j} \in \{0, 1\}$ is the state of the cell at row $i$ and column $j$, the lattice is periodic in the space direction, i.e. $n_{0, t} = n_{N, j}$.
 %$S$ to be the length of the material along the ``Space'' axis, $D$
 %to be the length of the material along the ``Time'' axis. 
 %Its ground state with energy $0$ also encodes a $110$ CA, where the direction of computation is from the left to right.
 
-\jinguo{show a comparison from right to left}\jinguo{I have already used D as the dimension}
-\ym{Great, i will do this}
+\jinguo{show a comparison from right to left}
+\ym{I will do this in the next version.}
 
-Here we conducted numerical experiments to examine how the cooling time scales with (i)
-the ``Space'' dimension $S$, (ii) the ``Time'' dimension $D$, (iii) the ``Width'' of the heat zone $W$, and (iv) the temperature gradient $\Lambda$.
+Here we conducted numerical experiments to examine how the cooling time $T_{c}$ scales with (i)
+the ``Space'' dimension $N$, (ii) the ``Time'' dimension $M$, (iii) the ``Width'' of the heat zone $W$, and (iv) the temperature gradient $\Lambda$.
 We use the number of SA sweeps as the metric to measure the cooling time, which could be determined with the binary search.
 We keep changing the heat bath moving speed $v$ (in unit of columns/sweep) until the system can reach a ground state configuration with $\sim 50\%$ probability.
-Let us denote this speed as $v_c$, then the cooling time can be denoted as $\frac{D}{v_c}$.
 
-\begin{figure}[h]
+\begin{figure}[]
     \centering
-    \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/MainNumericalResult.png}
-    \caption{Numerical Result\jinguo{images should use the pdf format, the font size should be larger. Is it possible to verify that the Ising model is similar to the toy model? What is $T$ in the xlabel?}}
+    \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/main_result.pdf}
+    \caption{Numerical Result
+    \jinguo{images should use the pdf format, the font size should be larger. Is it possible to verify that the Ising model is similar to the toy model? What is $T$ in the xlabel?}
+    \ym{I changed the labels. Maybe i need to conduct another numerical experiment
+    to verify the similarity between the Ising model and the toy model.}
+    }
     \label{fig:main-numerical-result}
 \end{figure}
 
 \jinguo{you need to explain the results... what can we learn from the results?}
 \jinguo{bad variable name: Sweep Time}
-\Cref{fig:main-numerical-result} (a) shows the relationship between
-$\ln(\ln(D))$ and $\ln(\frac{\text{Sweep Time}}{D})$ shoule be linear, which implies 
-the time complexity along the ``Time'' direction should scale as $D\ln(D)^{f(\Lambda)}$. 
+\Cref{fig:main-numerical-result}(a) shows the relationship between
+$\ln(\ln(M))$ and $\ln(v)$ shoule be linear, which implies 
+the time complexity $T_c$ along the ``Time'' direction should scale as $M\ln(M)^{f(\Lambda)}$. 
 We then fit the slopes of each line and $\frac{1}{\ln(\Lambda)}$ and find the 
-empirical constant $c$ in (\ref{eq:total-annealing-time}) to be $3$. [Fig. \ref{fig:main-numerical-result}(b)] shows 
-the the relationship between Sweep Time and $S$ should be linear. Combining these two results, 
-we can conclude that the time complexity should scales as $DS\log(D)^{1+\frac{1}{3\ln(\Lambda)}}$, 
-which is consistent with our theoretical prediction in (\ref{eq:total-annealing-time}).
+empirical constant $c$ in \Cref{eq:total-annealing-time} to be $3$. \Cref{fig:main-numerical-result}(b) shows 
+the the relationship between $T_c$ and $M$ should be linear. Combining these two results, 
+we can conclude that the time complexity should scales as $NM\log(M)^{1+\frac{1}{3\ln(\Lambda)}}$, 
+which is consistent with our theoretical prediction in \Cref{eq:total-annealing-time}.
 
 \jinguo{I hope we can also present some results for the random fluctuation model.
 We just need some quantitative result about how the computing time scales with the depth.
 }
+\ym{This experiment can be conducted together with the verification of the similarity between the Ising model and the toy model.}
 
 % \begin{figure}[h]
 %     \centering
@@ -926,13 +930,13 @@ We just need some quantitative result about how the computing time scales with t
 
 \section{Physical implementation on Ising machine}\label{spin-glass}
 
-To examine whether this model could achieve a better performance when
-using adiabatic methods, we need to generalize this energy function to
-some good hamiltonian. There has already been work on mapping
-combinatorial optimization problems to a spin-glass model (known as the
-Ising Machine) and leveraging the properties of digital devices that
-simulate this Ising Machine to find an appropriate ground state, which
-encodes computational information~\cite{Aadit2022,Bybee2023}.
+% To examine whether this model could achieve a better performance when
+% using adiabatic methods, we need to generalize this energy function to
+% some good hamiltonian. There has already been work on mapping
+% combinatorial optimization problems to a spin-glass model (known as the
+% Ising Machine) and leveraging the properties of digital devices that
+% simulate this Ising Machine to find an appropriate ground state, which
+% encodes computational information~\cite{Aadit2022,Bybee2023}.
 
 
 
@@ -1050,10 +1054,10 @@ invariant under this transformation.
 \end{equation}
 
 We conducted numerical experiments to verify this equivalence under the condition
-that $\Lambda = 1.3$ and $n=15$. The result is shown in [Fig. \ref{EGvsMHB}].
+that $\Lambda = 1.3$ and $n=15$. The result is shown in \Cref{EGvsMHB}.
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/EGvsMHB.png}
+    \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/EGvsMHB.pdf}
     \caption{Running time v.s Depth of the material}
     \label{EGvsMHB}
 \end{figure}
