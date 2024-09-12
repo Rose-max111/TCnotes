@@ -637,7 +637,7 @@ where $q^\prime$ is the state of the center cell in the next generation.
 
 An $n$-vertex fully connected spin-glass Hamiltonian is described as follows.
 
-\begin{equation}
+\begin{equation}\label{eq:ising}
 E(\vs) = \sum_{i < j} J_{ij}s_us_v + \sum_{i=1}^{n}h_i s_i
 \end{equation}
 
@@ -684,50 +684,33 @@ A & 5\\
 By concatenating the rule 110 gadgets, we can construct a 2-dimensional TC that implements the rule 110 CA, as shown in \Cref{Surface-programmable-thermodynamic computer}.
 The gadget we constructed based on the Rule 110 CA naturally possesses Turing completeness. Therefore, this 2-dimensional TC is capable of universal computing.
 
-\subsection{Simulated Annealing}\label{simulated-annealing-algorithm}
+To set the inputs, we raise or lower the energy of spins on the left surface. To set a spin to $s_i=-1/1$, we raise/lower the external field $h_i$ by $\Delta_{in}>0$. By setting all the spins on the left surface, the ground state of the TC has no degeneracy, and the output is encoded in the spins on the right surface.
+One can also set the outputs by raising or lowering the energy of spins on the right surface. Due to the lack of reversibility, the ground state may still have degeneracy.
+Each ground states corresponds to a solution to the encoded circuit satisfaction problem if the target circuit is satisfiable.
+We denote the computation from the left to the right as the \emph{deterministic computation}, and the computation from the right to the left as the \emph{non-deterministic computation}.
+
+\subsection{Compute by annealing}\label{simulated-annealing-algorithm}
 
 With the proposed Ising model, we are interested in how efficiently we can drive the system to the ground state, which encodes the output of the CA.
-Since the natural cooling process is highly nontrivial to model, we consider a theoretical model for cooling, which is simulated annealing (SA)~\cite{Kirkpatrick1983}.
-\jinguo{random fluctuations may be linear in time considering the parallelism of the system.}
-It is known that when the system and heat bath are at thermal equilibrium, 
-the probability of a spin configuration $\mathbf{s}$ is given by the Boltzmann distribution:
-\begin{equation}
-    p(\mathbf{s}) = \frac{1}{Z}\exp\left(- \frac{E({\mathbf{s}})}{k_bT}\right),
-\end{equation}
-where $Z = \sum_{\mathbf{s}} \exp\left(-\frac{E({\mathbf{s}})}{k_bT}\right)$ is the partition function, 
-$E({\mathbf{s}})$ is the energy of the each of $2^n$ spin configuration, labeled by $\mathbf{s} = (s_1, s_2, \cdots, s_n)$, $k_b$ is the Boltzmann constant, and $T$ is the temperature of the heat bath. 
-In the following, we set $k_b = 1$.
+In contrast with a traditional computation model, cooling an energy model does not have a specific direction.
+It can be done from the input to the output, from the output to the input or neither.
+Intuitively, cooling the deterministic computation is much easier than cooling the non-deterministic computation.
+Since the latter encodes the circuit satisfaction problem, which is NP-hard, while the former is a simple linear-time computation.
+However, this is not always the case.
+Global cooling by gradually lowering the temperature (or annealing), as in the Ising machine~\cite{fabre2014optical}, may still hard for a deterministic computation, no matter how large the input detuning $\Delta_{in}$ is.
 
-We employ the Metropolis-Hastings algorithm~\cite{metropolis1953equation} to characterize the thermodynamic process of the TC system as modulated by the heat bath.
-This algorithm perform a random walk in the state space of the TC, each step we try to flip a spin,
-and the probability of accepting a move from state $\mathbf{s}$ to $\mathbf{s}^\prime$ is given by:
-\begin{equation}
-    P_{\text{accept}} = \frac{1}{1+\exp\left(\frac{E({\mathbf{s}^\prime}) - E({\mathbf{s}})}{T}\right)}.
-\end{equation}
-This accepting probability follows from the Glauber dynamics~\cite{glauber1963time}.
-It can be shown that this process is Markovian and ergodic, and the system will eventually reach the thermal equilibrium.
-To determine the speed of the convergence, we should notice the spectral gap of the transition matrix of the Markov chain, which is defined as
-
-\begin{equation}
-    \Delta = 1 - \frac{\lambda_2}{\lambda_1}
-\end{equation}
-
-where $\lambda_1$ and $\lambda_2$ are the largest and second largest eigenvalues of the transition matrix, respectively.
-In order to sample from the distribution $\epsilon$ close to the equilibrilium distribution, the number of steps required is $O(\log_{1-\Delta} \epsilon)$.
-
-In the following article, denote one sweep as the process of trying to flip each spin at its local temperature.
+%In the following article, denote one sweep as the process of trying to flip each spin at its local temperature.
 
 % \ym{
 %     The material was orderly grown by slowly moving the temperature gradient in-plane~\cite{Zhang2014}. Tested thermal gradient force for grain boundary migration~\cite{Bai2015}.
 % }
-We test the hypothesis: Cooling is easy if the process is from the
-deterministic direction, hard if the process is from the
-non-deterministic direction.
-
+%We test the hypothesis: Cooling is easy if the process is from the
+%deterministic direction, hard if the process is from the
+%non-deterministic direction.
 \begin{hyp}
 Let $\mathcal{P}$ be a circuit SAT problem, and $\mathcal{E}$ be an energy modeling encoding of $\mathcal{P}$ (locally). There exists a subset of $\mathcal{E}$ that exhibits the overlap gap property~\cite{Gamarnik2021}.
 \end{hyp}
-\jinguo{Leave this issue to Maddie}
+\jinguo{Confirm with Maddie}
 The overlap gap property is a property for describing the algorithmic intractability in random structures, which is based on the topological disconnectivity property of the set of pair-wise distances of near optimal solutions.
 If the energy landscape of a optimization problem exhibits the overlap gap property, then it can not be solved by any local algorithms in polynomial time, including the simulated annealing method used in this work.
 The intuition comes from the energy model encoding of the identity circuit.
@@ -735,6 +718,31 @@ Given a circuit with $n$ bits, the ground state degeneracy of the corresponding 
 The energy model can be vertically stacked $n$ copy gadgets.
 Let the circuit depth be $d \sim 2^{\gamma \sqrt{n}}$ for some constant $\gamma > 0$.
 The Hamming distance between two degenerate ground states for different input signals is at least $d$, which is exponential to $n$. Let us define the size of the problem as $d\times n$, then this distance is clearly linear to the problem size. We left the rigorous proof of this hypothesis to mathematicians.
+
+
+\subsubsection{Simulated annealing algorithm}
+Since the natural cooling process is highly nontrivial to model, we consider a theoretical model for cooling, which is the simulated annealing (SA)~\cite{Kirkpatrick1983}.
+When the energy model in \Cref{eq:ising} thermalizes at temperature $T$, the spin configuration $\vs = (s_1, s_2, \cdots, s_n)$ follows the Boltzmann distribution:
+\begin{equation}
+    p(\vs) = \frac{1}{Z}\exp\left(- \frac{E({\vs})}{k_bT}\right),
+\end{equation}
+where $Z = \sum_{\vs} \exp\left(-\frac{E({\vs})}{k_bT}\right)$ is the partition function, 
+$E({\vs})$ is the energy of the spin configuration $\vs$, and $k_b$ is the Boltzmann constant, which is set $k_b = 1$ in this work.
+%We employ the Metropolis-Hastings algorithm~\cite{metropolis1953equation} to characterize the thermodynamic process of the TC system as modulated by the heat bath.
+SA is a Monte Carlo method~\cite{metropolis1953equation} that simulates the thermal annealing process.
+It performs a random walk in the state space of the TC, each step we try to flip a spin according to some unbiased prior distribution,
+and the probability of accepting a move from state $\vs$ to $\vs^\prime$ is given by:
+\begin{equation}
+    P_{\vs^\prime\leftarrow \vs} = \frac{1}{1+\exp\left(\frac{E({\vs^\prime}) - E({\vs})}{T}\right)}.
+\end{equation}
+This accepting probability follows from the Glauber dynamics~\cite{glauber1963time}.
+It can be shown that this process is Markovian and ergodic, and the system will eventually reach the thermal equilibrium.
+The speed of the convergence is determined by the spectral gap of the transition matrix of the Markov chain, which is defined as
+\begin{equation}
+    \Delta = 1 - \frac{\lambda_2}{\lambda_1},
+\end{equation}
+where $\lambda_1$ and $\lambda_2$ are the largest and second-largest eigenvalues of the transition matrix, respectively.
+In order to sample from the distribution $\epsilon$ close to the equilibrium distribution, the number of steps required is $O(\log_{1-\Delta} \epsilon)$, i.e. the distribution quality improves exponentially with the number of sampling steps.
 
 
 \subsection{Cooling computation with an idealized heat bath}\label{cooling-computation-with-moving-heat-bath}
