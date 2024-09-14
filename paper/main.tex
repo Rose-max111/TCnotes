@@ -725,30 +725,22 @@ Since there is no standard approach to model the physical annealing process, we 
 \subsection{Dynamic annealing}\label{cooling-computation-with-moving-heat-bath}
 \jinguo{Please shorten this section!}
 
-\jinguo{
-    Need to introduce the heat zone.
-}
-\ym{
-    I tried. Please check if it is clear and if i still need to cut some details off.
-}
 
-To overcome the overlap gap property, we propose to cool the system piece by piece, by introducing a heat zone with width $W$.
+To overcome the overlap gap property, we propose to do block annealing, by introducing a heat zone with width $W$.
 It represents the region of the system that interacts with the heat bath, as shown in \Cref{Surface-programmable-thermodynamic computer}.
 Let layer $i$ be defined as the set of spins with x-coordinate $i$.
-The system is devided into $\lceil\frac{M}{W}\rceil$ parts,
-where part $j$ consists of layers in the range $[jW, (j+1)W-1]$.
-The system can then be cooled by sequentially cooling each parts with an idealized heat bath, 
-which maintains a space-invariant temperature within the heat zone while keeping other regions at zero temperature.
-To drive the system toward the ground state, the cooling order should proceed from left to right
-, corresponding to the computation direction of the cellular automata.
+The system is devided into $\lceil\frac{M}{W}\rceil$ blocks,
+where block $j$ consists of layers in the range $[(j-1)W+1, jW]$.
+The system can then be cooled by sequentially cooling the blocks from left to right with an heat bath, where the temperature of the heat bath is gradually decreased.
+We treat it as an ideal bath as it maintains a space-invariant temperature within the heat zone while keeping other regions at zero temperature.
 
-Assume the annealing procedure in each part has an error probability $\epsilon$ that prevents at least one layer
-from reaching the local ground state. 
-Repeating the procedure $\frac{M}{W}$ times results in a success probability of $(1 - \epsilon)^{\frac{M}{W}}$ for finding the global ground state. 
+
+Assume the SA procedure in each block has an error probability $\epsilon$.
+Repeating the procedure in $\frac{M}{W}$ blocks results in a success probability of $(1 - \epsilon)^{\frac{M}{W}}$ for finding the global ground state. 
 To keep this probability constant as $M \to \infty$, the error probability $\epsilon$ should scale as $\frac{W}{M}$.
 
 
-Now we turn to determining the sweep time $t_{th}$ required to achieve an error probability $\epsilon$ in each part. 
+Now we turn to determining the sweep time $t_{th}$ required to achieve $\epsilon$ error in each procedure. 
 Let $\lambda_1$ and $\lambda_2$ be the largest and second largest eigenvalues of the Markov transition matrix, respectively. 
 We assume the relationship between $\frac{\lambda_2}{\lambda_1}$ and $W$ can be expressed as
 \begin{equation}
@@ -771,27 +763,25 @@ and the total sweep times scale as $\frac{M}{W}\ln(\frac{M}{W})e^W$.
 
 \subsubsection{A more realistic heat bath}\label{estimation-of-the-computing-time}
 
-In practice, temperature changes cannot occur instantaneously, and the temperature distribution within the heating zone may not be uniform.
-Thus, we come up with a more realistic model for the block annealing process.
-
-Now suppose the heat bath only connects to a small rectangle region of the system, creating a temperature gradient through heat flux,
+In practice, the heat bath and heat flux should establish a temperature gradient in the system.
+% Suppose the heat bath only connects to a small rectangle region of the system.
 The temperature $T(x, t)$  at a position with x-coordinate  $x$  and time  $t$  can be modeled as  $T(x, t) \propto \Lambda^{-|x - L(t)|}$ , 
 where $\Lambda$ is a heat flux constant and $L(t)$ denotes the center of the heat bath at time $t$.
 
 The block annealing process then can be reconstruct as moving
 the heat bath from the left surface to the right surface at speed $v$. Defining $\Delta E_{max}$ to be the
 largest possible energy change when a spin is fliped.
-The effective heat zone with width $W'$ should then be $[y-W', y]$, where position $y$ satisfying 
-$\exp(\frac{\Delta E_{max}}{T(y)}) = 0.1$ and $y<L(t)$. Since the layers
-in fronts of the effective heat zone can only be fliped with a $\epsilon$ probability if the local energy would increase. 
-The effective width $W'$ then should scale as $\exp(-\Delta E_{max} \Lambda^{cW'}) \sim \epsilon \sim \frac{W'}{M}$, where $c$ is an empirical constant for effective width and can be determined during the experiment. 
+The effective heat zone with width $W'(\Lambda)$ should then be $[y-W'(\Lambda), y]$, where position $y$ satisfying 
+$\exp(\frac{\Delta E_{max}}{T(y)}) = 0.1$ and $y<L(t)$. 
+% Since the layers in fronts of the effective heat zone can only be fliped with a $\epsilon$ probability if the local energy would increase. 
+The effective width $W'$ then should scale as $\exp(-\Delta E_{max} \Lambda^{cW'(\Lambda)}) \sim \epsilon$, where $c$ is an empirical constant and can be determined during the experiment. 
 \ym{I am not sure about how to give a concrete definition of the effective width $W'$.}
 
-The total sweep time with a fixed inputs size $N$ can be calculated as 
+The total sweep time with a fixed inputs size $N$ can then be calculated as 
 
 \begin{equation}
     \label{eq:total-annealing-time}
-    t_{total} \propto \frac{M}{W'}(\ln(\frac{M}{W'}))^{1+ \frac{1}{c\ln(\Lambda)}}
+    t_{total} \propto \frac{M}{W'(\Lambda)}(\ln(\frac{M}{W'(\Lambda)}))^{1+ \frac{1}{c\ln(\Lambda)}}
 \end{equation}
 
 To determine the relationship between the total annealing time and the input size $N$, we should
@@ -807,39 +797,11 @@ The moving speed $v$ can be then calculated as
     v \propto \frac{t_{total}}{M} = N\log^{1 + \frac{1}{c\ln(\Lambda)}}(M)
 \end{equation}
 
-\subsubsection{Testing model with non-equilibrium simulated annealing}\label{some-details-about-non-equilibrium-simulated-annealing}\jinguo{Suggested subtitle: Simulating temperature gradient}
-
-The classical simulated annealing can only deal with the situation that
-the temperature is space-invariant. However, we need to borden this concept
-due to the temperature gradient. Although there are many ways to
-simulated a real-world system with temperature gradient, such as
-Molecular Dynamics \cite{Bai2015, Deng2006}, but
-these methods mainly depend on dynamically adjusting the atomic
-velocities to achieve a temperature gradient, which can't be directly
-used in our model.
-
-There are also Monte Carlo-based methods to simulate a moving
-temperature wave packet that facilitates material growth~\cite{Godfrey1995, Tan2017}.
-However, these methods fail to establish a direct connection between the simulated temperature and experimental
-temperature~\cite{Zollner2014}.
-Therefore, based on HeatBath acceptance rule, we made a slight modification to the classical SA model.\jinguo{??? shouldn't it be Glauber dynamics?}
-
-When we flip one spin, there would be some energy difference
-$\Delta E_{i}$ in field $i$ with temperature $T_i$. The
-probability to accept this flip would be
-
-\begin{equation}
-    \label{eq:non-equilibrium-SA}
-P = \frac{1}{1 + e^{\sum_i \frac{\Delta E_i}{T_i}}}
-\end{equation}
-
-It is easily to observe that when the system returns to
-heat-equilibrium, the probability reverts to the classical HeatBath
-acceptance probability. We also provided a more general proof by constructing another equivalent model in \Cref{proof-of_non-equilibrium-SA}.
-
 
 \section{Numerical simulation}\label{sec:numerical-result}
 
+
+\subsection{Model and Method}
 Given that simulating a CA with a deep computational layer on the Ising model requires many spins, making large-scale numerical simulations impractical, we opted to introduce a similar but simpler energy model to observe the behavior on a larger scale.
 Let us define a simpler but ``equivalent'' energy model on a 2D lattice of size $N \times M$, whose hamiltonian
 is given by
@@ -851,35 +813,56 @@ where $n_{i, j} \in \{0, 1\}$ is the state of the cell at row $i$ and column $j$
 %to be the length of the material along the ``Time'' axis. 
 %Its ground state with energy $0$ also encodes a $110$ CA, where the direction of computation is from the left to right.
 
+When one spin is flipped in the SA, there would be some energy difference
+$\Delta E_{i}$ in field $i$ with temperature $T_i$. 
+We choose the probability to accept this flip to be
+
+\begin{equation}
+    \label{eq:non-equilibrium-SA}
+P = \frac{1}{1 + e^{\sum_i \frac{\Delta E_i}{T_i}}}
+\end{equation}
+
+It is easily to observe that when the system returns to
+heat-equilibrium, the probability reverts to the Glauber dynamics.
+We also provided a more general proof by constructing another equivalent model in \Cref{proof-of_non-equilibrium-SA}.
+
+
+\subsection{Numerical Result}
 \jinguo{show a comparison from right to left}
-\ym{I will do this in the next version.}
 
 Here we conducted numerical experiments to examine how the cooling time $T_{c}$ scales with (i)
 the ``Space'' dimension $N$, (ii) the ``Time'' dimension $M$, (iii) the ``Width'' of the heat zone $W$, and (iv) the temperature gradient $\Lambda$.
+\ym{I have not conducted experiments for (iii) and (iv).}
 We use the number of SA sweeps as the metric to measure the cooling time, which could be determined with the binary search.
 We keep changing the heat bath moving speed $v$ (in unit of columns/sweep) until the system can reach a ground state configuration with $\sim 50\%$ probability.
 
-\begin{figure}[]
+\begin{figure*}[]
     \centering
-    \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/main_result.pdf}
-    \caption{Numerical Result
+    \vspace*{-\topskip}
+    \includegraphics[width=\textwidth,keepaspectratio]{../notes/images/main_result.pdf}
+    \caption{Numerical Result.
     \jinguo{images should use the pdf format, the font size should be larger. Is it possible to verify that the Ising model is similar to the toy model? What is $T$ in the xlabel?}
-    \ym{I changed the labels. Maybe i need to conduct another numerical experiment
-    to verify the similarity between the Ising model and the toy model.}
+    \ym{If a comparison between Ising model and toy model is a must, plese inform me.}
     }
     \label{fig:main-numerical-result}
-\end{figure}
+\end{figure*}
 
-\jinguo{you need to explain the results... what can we learn from the results?}
-\jinguo{bad variable name: Sweep Time}
+% \jinguo{you need to explain the results... what can we learn from the results?}
 \Cref{fig:main-numerical-result}(a) shows the relationship between
 $\ln(\ln(M))$ and $\ln(v)$ shoule be linear, which implies 
 the time complexity $T_c$ along the ``Time'' direction should scale as $M\ln(M)^{f(\Lambda)}$. 
 We then fit the slopes of each line and $\frac{1}{\ln(\Lambda)}$ and find the 
-empirical constant $c$ in \Cref{eq:total-annealing-time} to be $3$. \Cref{fig:main-numerical-result}(b) shows 
-the the relationship between $T_c$ and $M$ should be linear. Combining these two results, 
+empirical constant $c$ in \Cref{eq:total-annealing-time} to be $3$. 
+
+\Cref{fig:main-numerical-result}(b) shows 
+the the relationship between $T_c$ and $N$ should be linear. Combining these two results, 
 we can conclude that the time complexity should scales as $NM\log(M)^{1+\frac{1}{3\ln(\Lambda)}}$, 
 which is consistent with our theoretical prediction in \Cref{eq:total-annealing-time}.
+
+\Cref{fig:main-numerical-result}(c) compares the time complexity with different annealing
+methods. It costs exponential time to cool the system with the global annealing method no matter
+we set the system to perform a deterministic or non-deterministic computation. Using the blocking
+annealing method to perform a non-deterministic computation is still hard, too.
 
 \jinguo{I hope we can also present some results for the random fluctuation model.
 We just need some quantitative result about how the computing time scales with the depth.
@@ -1029,6 +1012,22 @@ where $\lambda_1$ and $\lambda_2$ are the largest and second-largest eigenvalues
 In order to sample from the distribution $\epsilon$ close to the equilibrium distribution, the number of steps required is $O(\log_{1-\Delta} \epsilon)$, i.e. the distribution quality improves exponentially with the number of sampling steps.
 
 \section{Proof of the applicability of non-equilibrium SA}\label{proof-of_non-equilibrium-SA}
+
+The classical simulated annealing can only deal with the situation that
+the temperature is space-invariant. However, we need to borden this concept
+due to the temperature gradient. Although there are many ways to
+simulated a real-world system with temperature gradient, such as
+Molecular Dynamics \cite{Bai2015, Deng2006}, but
+these methods mainly depend on dynamically adjusting the atomic
+velocities to achieve a temperature gradient, which can't be directly
+used in our model.
+
+There are also Monte Carlo-based methods to simulate a moving
+temperature wave packet that facilitates material growth~\cite{Godfrey1995, Tan2017}.
+However, these methods fail to establish a direct connection between the simulated temperature and experimental
+temperature~\cite{Zollner2014}.
+Therefore, based on HeatBath acceptance rule, we made a slight modification to the classical SA model.\jinguo{??? shouldn't it be Glauber dynamics?}
+
 
 Assume there is another model where the temperature at the region with 
 time coordinate $x$ at step $t$ is $T(x, t) = T_0\Lambda^{x - \eta t}$, where 
