@@ -726,32 +726,30 @@ Since there is no standard approach to model the physical annealing process, we 
 \jinguo{Please shorten this section!}
 
 
-To overcome the overlap gap property, we propose to do block annealing, by introducing a heat zone with width $W$.
-It represents the region of the system that interacts with the heat bath, as shown in \Cref{Surface-programmable-thermodynamic computer}.
-Let layer $i$ be defined as the set of spins with x-coordinate $i$.
-The system is devided into $\lceil\frac{M}{W}\rceil$ blocks,
-where block $j$ consists of layers in the range $[(j-1)W+1, jW]$.
-The system can then be cooled by sequentially cooling the blocks from left to right with an heat bath, where the temperature of the heat bath is gradually decreased.
-We treat it as an ideal bath as it maintains a space-invariant temperature within the heat zone while keeping other regions at zero temperature.
-
+To overcome the overlap gap property, we propose to do block-wise annealing.
+As shown in \Cref{Surface-programmable-thermodynamic computer}, we divide the lattice into $\frac{M}{W}$ blocks along the time dimension, each having width $W$.
+%by introducing a heat zone with width $W$.
+%It represents the region of the system that interacts with the heat bath, as shown in \Cref{Surface-programmable-thermodynamic computer}.
+%Let layer $i$ be defined as the set of spins with x-coordinate $i$.
+These blocks are initialized to a low enough temperature, so that the spins freeze into a random local minimum.
+Then we anneal these blocks sequentially from left to right by heating up a block to a temperature higher than the energy scale and then cooling it down.
+%We treat it as an ideal bath as it maintains a space-invariant temperature within the heat zone while keeping other regions at zero temperature.
+Given a slow enough cooling rate, the spins in the block will settle into the global ground state.
+The cooling rate determines the true computing speed of this model.
+It must scale with the number of computational steps $M$, otherwise, the probability of success will exponentially decrease with the number of blocks.
+How cooling rate should scale with $M$ becomes a key question in this work.
 
 Assume the SA procedure in each block has an error probability $\epsilon$.
 Repeating the procedure in $\frac{M}{W}$ blocks results in a success probability of $(1 - \epsilon)^{\frac{M}{W}}$ for finding the global ground state. 
-To keep this probability constant as $M \to \infty$, the error probability $\epsilon$ should scale as $\frac{W}{M}$.
-
-
-Now we turn to determining the sweep time $t_{th}$ required to achieve $\epsilon$ error in each procedure. 
-Let $\lambda_1$ and $\lambda_2$ be the largest and second largest eigenvalues of the Markov transition matrix, respectively. 
-We assume the relationship between $\frac{\lambda_2}{\lambda_1}$ and $W$ can be expressed as
+To fix the success probability for arbitrary $M$, we must have $\epsilon \sim \frac{W}{M}$.
+The annealing time $t_{th}$ required to achieve a certain error in each block is determined by the spectral gap $\Delta$ of the Markov transition matrix of the SA update on the block.
+%Since the largest eigenvalue of a transition matrix is 1, the spectral gap is $\Delta = 1 - \lambda_2$, where $\lambda_2$ is the second-largest eigenvalue.
+The scaling behavior of $\Delta$ and block size $W$ can be complicated, in the worst case, it can be exponential, i.e.,
 \begin{equation}
     \label{eq:spectral-gap}
-    1 - \frac{\lambda_2}{\lambda_1} \sim e^{-W}.
+    \Delta \sim e^{-W}.
 \end{equation}
-Consequently, $t_{th}$ is related to $\epsilon$ by:
-\begin{equation}
-    \left( \frac{\lambda_2}{\lambda_1} \right) ^ {t_{th}} = \epsilon \rightarrow t_{th} \sim \ln(\frac{M}{W})e^{W},
-\end{equation}
-and the total sweep times scale as $\frac{M}{W}\ln(\frac{M}{W})e^W$.
+Consequently, $t_{th}$ is related to $\epsilon$ by $\left( 1-\Delta \right) ^ {t_{th}} = \epsilon$, which gives $t_{th} \sim \ln(\frac{M}{W})e^{W}$, and the total sweep times scale as $\frac{M}{W}\ln(\frac{M}{W})e^W$.
 
 % However, solving the ground state from the non-deterministic direction is at least as hard as solving the circuit satisfiability problem, which is NP-complete~\cite{Moore2011}.
 
@@ -763,25 +761,32 @@ and the total sweep times scale as $\frac{M}{W}\ln(\frac{M}{W})e^W$.
 
 \subsubsection{A more realistic heat bath}\label{estimation-of-the-computing-time}
 
-In practice, the heat bath and heat flux should establish a temperature gradient in the system.
+%In practice, the heat bath and heat flux should establish a temperature gradient in the system.
 % Suppose the heat bath only connects to a small rectangle region of the system.
-The temperature $T(x, t)$  at a position with x-coordinate  $x$  and time  $t$  can be modeled as  $T(x, t) \propto \Lambda^{-|x - L(t)|}$ , 
-where $\Lambda$ is a heat flux constant and $L(t)$ denotes the center of the heat bath at time $t$.
+Instead of block-wise annealing, we propose to move the heat bath from the left surface to the right surface at a constant speed $v$.
+At time $t$, the temperature distribution $T$ is given by $T_{\rm max}\Lambda^{-|x - vt|}$, where $x$ is the computational step, $T_{\rm max}$ is the maximum temperature and $\Lambda > 1$ is a constant that determines the width of the heat zone.
+%The temperature $T(x, t)$  at a position with x-coordinate  $x$  and time  $t$  can be modeled as  $T(x, t) \propto \Lambda^{-|x - L(t)|}$ , 
+%where $\Lambda$ is a heat flux constant and $L(t)$ denotes the center of the heat bath at time $t$.
 
-The block annealing process then can be reconstruct as moving
-the heat bath from the left surface to the right surface at speed $v$. Defining $\Delta E_{max}$ to be the
-largest possible energy change when a spin is fliped.
-The effective heat zone with width $W'(\Lambda)$ should then be $[y-W'(\Lambda), y]$, where position $y$ satisfying 
-$\exp(\frac{\Delta E_{max}}{T(y)}) = 0.1$ and $y<L(t)$. 
+We can define an effective heat zone with width $W'$ as the width of the raising edge of the temperature distribution, where the spins can be cooled actively.
+%Defining $\Delta E_{max}$ to be the largest possible energy change when a spin is fliped.
+%The effective heat zone with width $W'(\Lambda)$ should then be $[y-W'(\Lambda), y]$, where position $y$ satisfying 
+%$\exp(\frac{\Delta E_{max}}{T(y)}) = 0.1$ and $y<L(t)$. 
 % Since the layers in fronts of the effective heat zone can only be fliped with a $\epsilon$ probability if the local energy would increase. 
-The effective width $W'$ then should scale as $\exp(-\Delta E_{max} \Lambda^{cW'(\Lambda)}) \sim \epsilon$, where $c$ is an empirical constant and can be determined during the experiment. 
-\ym{I am not sure about how to give a concrete definition of the effective width $W'$.}
+The spins outside the effective heat zone are either frozen (too cold) or flip randomly (too hot).
+As a spin flips with a probability $\sim e^{-\Delta E/T}$, the cold edge of the heat zone can be defined as the position where the probability of flipping is $\epsilon$.
+We have $W'$ scales with the required error probability $\epsilon$ as:
+\begin{equation}
+    e^{-\frac{\Delta E}{T_{\rm max}}\Lambda^{cW'}} \sim \epsilon
+\end{equation}
+where $c$ is an empirical constant and can be determined during the experiment. 
+\ym{I am not sure about how to give a concrete definition of the effective width $W'$.}\jinguo{How about this?}
 
 The total sweep time with a fixed inputs size $N$ can then be calculated as 
 
 \begin{equation}
     \label{eq:total-annealing-time}
-    t_{total} \propto \frac{M}{W'(\Lambda)}(\ln(\frac{M}{W'(\Lambda)}))^{1+ \frac{1}{c\ln(\Lambda)}}
+    t_{total} \propto \frac{M}{W'}(\ln(\frac{M}{W'}))^{1+ \frac{1}{c\ln(\Lambda)}}
 \end{equation}
 
 To determine the relationship between the total annealing time and the input size $N$, we should
@@ -789,7 +794,7 @@ further discuss the relationship between the spectral gap given in  \Cref{eq:spe
 However, we failed to find a direct relationship.
 Numerical result shows that computing complexity is linear to $N$. Thus a total sweep time
 for the computation should scale as $NM\log^{1 + \frac{1}{c\ln(\Lambda)}}(M)$.
-\ym{Please help me to think about how to evaluate the time complexity while $N$ increases.} 
+\ym{Please help me to think about how to evaluate the time complexity while $N$ increases.}\jinguo{Leave it to Maddie}
 The moving speed $v$ can be then calculated as
 
 \begin{equation}
