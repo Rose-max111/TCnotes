@@ -749,7 +749,10 @@ The scaling behavior of $\Delta$ and block size $W$ can be complicated, in the w
     \label{eq:spectral-gap}
     \Delta \sim e^{-W}.
 \end{equation}
-Consequently, $t_{th}$ is related to $\epsilon$ by $\left( 1-\Delta \right) ^ {t_{th}} = \epsilon$, which gives $t_{th} \sim \ln(\frac{M}{W})e^{W}$, and the total sweep times scale as $\frac{M}{W}\ln(\frac{M}{W})e^W$.
+Consequently, $t_{th}$ is related to $\epsilon$ by $\left( 1-\Delta \right) ^ {t_{th}} = \epsilon$, which gives $t_{th} \sim \ln\left(\frac{M}{W}\right)e^{W}$, and the total sweep times scale as:
+\begin{equation}\label{eq:totaltime}
+t_{\rm total} \sim \frac{M}{W}\ln\left(\frac{M}{W}\right)e^W.
+\end{equation}
 
 % However, solving the ground state from the non-deterministic direction is at least as hard as solving the circuit satisfiability problem, which is NP-complete~\cite{Moore2011}.
 
@@ -781,12 +784,12 @@ We have $W'$ scales with the required error probability $\epsilon$ as:
 \end{equation}
 where $c$ is an empirical constant and can be determined during the experiment. 
 \ym{I am not sure about how to give a concrete definition of the effective width $W'$.}\jinguo{How about this?}
+We have $\log(\Lambda) cW' \sim \log(\frac{T_{\rm max}}{\Delta E}\log(\frac{1}{\epsilon}))$.
 
-The total sweep time with a fixed inputs size $N$ can then be calculated as 
-
+Combining with \Cref{eq:totaltime}, the total annealing time can be estimated as
 \begin{equation}
     \label{eq:total-annealing-time}
-    t_{total} \propto \frac{M}{W'}(\ln(\frac{M}{W'}))^{1+ \frac{1}{c\ln(\Lambda)}}
+    t_{\rm total} \sim \frac{M}{W'}\left(\ln\left(\frac{M}{W'}\right)\right)^{1+ \frac{1}{c\ln(\Lambda)}}
 \end{equation}
 
 To determine the relationship between the total annealing time and the input size $N$, we should
@@ -848,6 +851,7 @@ We keep changing the heat bath moving speed $v$ (in unit of columns/sweep) until
     \caption{Numerical Result.
     \jinguo{images should use the pdf format, the font size should be larger. Is it possible to verify that the Ising model is similar to the toy model? What is $T$ in the xlabel?}
     \ym{If a comparison between Ising model and toy model is a must, plese inform me.}
+    \jinguo{(1) We should make the lines in (c) fit better with the data points. (2) Please complete the caption. You need to at least explain the short notations: GA, HB. (3) Please use log-scale axes for (a) and (c), instead of taking log directly on the data points. $\ln(\ln(M))$ is difficult to interpret.}
     }
     \label{fig:main-numerical-result}
 \end{figure*}
