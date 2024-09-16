@@ -77,18 +77,20 @@ By manipulating the minimum free energy state of the system, the computation can
 The change of free energy minimum state can be achieved by changing the distribution of the particles in the system, such as in the case of DNA machines~\cite{Feynman2018} or lowering the temperature of the system, such as in the case of Ising machines~\cite{boixo2013experimental}.
 The former is known as the Brownian machine, which evolves the system toward the direction of the entropy increase, while the latter are energy based, which evolves the system toward the direction of the energy decrease.
 
-Energy based models are probability one of the most powerful models for computation.
-The Ising model is not only capable of universal computation~\cite{gu2012encoding}, and it can be used to formulate many NP problems~\cite{lucas2014ising,mohseni2022ising}.
+In this work, we focus on the energy based models, which are one of the most powerful models for computation.
+For example, the Ising model can formulate any problems in NP~\cite{gu2012encoding, lucas2014ising,mohseni2022ising}.
+However, Ising models with random coupling are notoriously hard to thermalize, even with the help of quantum entanglement~\cite{boixo2013experimental, boixo2014evidence, Pichler2018, Ebadi2022, Nguyen2023}.
+%There is no evidence yet that they can significantly outperform existing algorithms run on classical computers~\cite{}.
 
-However, they are notoriously hard to thermalize, even with the help of quantum entanglement~\cite{boixo2013experimental, boixo2014evidence, Pichler2018, Ebadi2022, Nguyen2023}.
-There is no evidence yet that they can significantly outperform existing algorithms run on classical computers~\cite{}.
-Even when the encoded problem is an easy one, it is not guaranteed that the system can thermalize in polynomial time as we will show in the main text.
+Can we utilize a natural energy based model for efficient computation?
+Intrigued by this question, we designed an energy based TC as a translational invariant Ising model with universal computation capability on its surface, and study how to efficiently thermalize the system to perform computation.
+Our TC implements a universal elementary CA, the translational invariance in both time and space dimension mimics a crystal in nature, which also eases the study of the scaling behaviors the thermalization process.
 
-Intrigued by the question of how to thermalize and lower the energy of an Ising machine, we propose a new type of TC that has a crystalline structure.
-The crystalline structure is based on a universal elementary CA, and is translational invariant in all spacial dimensions.
-The translational invariance not only makes the crystal easier to be constructed in nature, but also enables the study of the scaling behavior the thermalization process.
-In the rest of this paper, we first show that the crystalline structure can be programmed on its surfaces to perform universal computation \Cref{sec:Overview-of-main-results}.
-Then we use numerical results in \Cref{sec:numerical-result} to show that if we thermalize the crystal from the so-called ``deterministic direction'', the crystal can thermalize in time almost linear to the size of the crystal, i.e. efficient computation can be performed.
+In the rest of this paper, we first show the design of crystalline structure that can be programmed on its surfaces to perform universal computation in \Cref{sec:Overview-of-main-results}.
+The method we use to study the thermalization process is introduced in \Cref{sec:model-method}.
+Finally, we reported numerical simulation results in \Cref{sec:numerical-result}. We show that even when the encoded problem is a deterministic computation, the system is not guaranteed to thermalize in time polynomial to the size of the crystal.
+However, if we use the moving temperature gradient method, the system can thermalize in time almost linear to the size of the crystal, i.e. just like a normal computer.
+
 
 % The way to lower the free energy is inspired by the process of crystalization.
 % The material is orderly grown by slowly moving the temperature gradient in-plane~\cite{Zhang2014}.
