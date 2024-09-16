@@ -753,11 +753,11 @@ The annealing time $t_{th}$ required to achieve a certain error in each block is
 The scaling behavior of $\Delta$ and block size $W$ can be complicated, in the worst case, it can be exponential, i.e.,
 \begin{equation}
     \label{eq:spectral-gap}
-    \Delta \sim e^{-W}.
+    \Delta \sim e^{-f(W)},
 \end{equation}
-Consequently, $t_{th}$ is related to $\epsilon$ by $\left( 1-\Delta \right) ^ {t_{th}} = \epsilon$, which gives $t_{th} \sim \ln\left(\frac{M}{W}\right)e^{W}$, and the total sweep times scale as:
+where $f(W)$ is a polynomial of $W$. Consequently, $t_{th}$ is related to $\epsilon$ by $\left( 1-\Delta \right) ^ {t_{th}} = \epsilon$, which gives $t_{th} \sim \ln\left(\frac{M}{W}\right)e^{f(W)}$, and the total sweep times scale as:
 \begin{equation}\label{eq:totaltime}
-t_{\rm total} \sim \frac{M}{W}\ln\left(\frac{M}{W}\right)e^W.
+t_{\rm total} \sim \frac{M}{W}\ln\left(\frac{M}{W}\right)e^{f(W)}.
 \end{equation}
 
 % However, solving the ground state from the non-deterministic direction is at least as hard as solving the circuit satisfiability problem, which is NP-complete~\cite{Moore2011}.
@@ -786,37 +786,36 @@ The spins outside the effective heat zone are either frozen (too cold) or flip r
 As a spin flips with a probability $\sim e^{-\Delta E/T}$, the cold edge of the heat zone can be defined as the position where the probability of flipping is $\epsilon$.
 We have $W'$ scales with the required error probability $\epsilon$ as:
 \begin{equation}
-    e^{-\frac{\Delta E}{T_{\rm max}}\Lambda^{cW'}} \sim \epsilon
+    e^{-\frac{\Delta E}{T_{\rm max}}\Lambda^{W'}} \sim \epsilon
 \end{equation}
-where $c$ is an empirical constant and can be determined during the experiment. 
-\jinguo{How about this?}
 \ym{But I still don't think the constant $c$ is reasonable in this version. Anyway it is a better 
 description for $W'$.}
+\jinguo{I changed $c$ to $1/c$}
 
-We can further derive $e^{W'}$ as function of $\Lambda$:
+We can further derive $e^{W'}$ as function of $\Lambda$ by taking the logarithm of both sides:
 \begin{equation}
-    e^{\ln(\Lambda)cW'}\sim \ln(\frac{1}{\epsilon})\rightarrow e^{W'}\sim \ln(\frac{1}{\epsilon})^{\frac{1}{c\ln(\Lambda)}}
+    e^{\ln(\Lambda)W'}\sim \ln(\epsilon^{-1})\rightarrow e^{W'}\sim \ln(\epsilon^{-1})^{\frac{1}{\ln(\Lambda)}}
 \end{equation}
 
-Combining with \Cref{eq:totaltime} and $\epsilon \sim \frac{W'}{M}$, the total annealing time can be estimated as
+Let $f(x) = c x + b$, then $e^{f(W')} \sim \ln(\epsilon^{-1})^{\frac{c}{\ln(\Lambda)}}$.
+Combining with \Cref{eq:totaltime} and the requirement of $\epsilon \sim \frac{W'}{M}$, the total annealing time can be estimated as
 \begin{equation}
     \label{eq:total-annealing-time}
-    t_{\rm total} \sim \frac{M}{W'}\left(\ln\left(\frac{M}{W'}\right)\right)^{1+ \frac{1}{c\ln(\Lambda)}}
+    t_{\rm total} \sim \frac{M}{W'}\ln\left(\frac{M}{W'}\right)^{1+ \frac{c}{\ln(\Lambda)}}
 \end{equation}
-
-To determine the relationship between the total annealing time and the input size $N$, we should
-further discuss the relationship between the spectral gap given in  \Cref{eq:spectral-gap} and inputs size $N$.
-However, we failed to find a direct relationship.
-Numerical result shows that computing complexity is linear to $N$. Thus a total sweep time
-for the computation should scale as $NM\log^{1 + \frac{1}{c\ln(\Lambda)}}(M)$.
+The reason why we choose $f$ to be linear is due to the simplicity of the model, and it turns out to be a good approximation in the numerical simulation.
+%To determine the relationship between the total annealing time and the input size $N$, we should
+%further discuss the relationship between the spectral gap given in  \Cref{eq:spectral-gap} and inputs size $N$.
+%However, we failed to find a direct relationship.
+%Numerical result shows that computing complexity is linear to $N$.
+%Thus a total sweep time for the computation should scale as $NM\log^{1 + \frac{c}{\ln(\Lambda)}}(M)$.
 \ym{Please help me to think about how to evaluate the time complexity while $N$ increases.}\jinguo{Leave it to Maddie}
-The moving speed $v$ can be then calculated as
-
+The computing speed $v$ defined as operations per unit time, can be estimated as
 \begin{equation}
     \label{eq:moving-speed}
-    v \propto \frac{t_{total}}{M} = N\log^{1 + \frac{1}{c\ln(\Lambda)}}(M)
+    v = \frac{M}{t_{total}} \sim \ln(M)^{-(1 + \frac{c}{\ln(\Lambda)})}
 \end{equation}
-
+As the computational step $M$ increases, the computing speed $v$ decreases logarithmically.
 
 \section{Numerical simulation}\label{sec:numerical-result}
 
