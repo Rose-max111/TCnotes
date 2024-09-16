@@ -714,7 +714,7 @@ It can be rigorous proved that the cooling process is hard if the energy landsca
 %We test the hypothesis: Cooling is easy if the process is from the
 %deterministic direction, hard if the process is from the
 %non-deterministic direction.
-\begin{hyp}
+\begin{hyp}\label{hyp:overlap-gap}
 Let $\mathcal{P}$ be a circuit SAT problem, and $\mathcal{E}$ be an energy modeling encoding of $\mathcal{P}$ (locally). There exists a subset of $\mathcal{E}$ that exhibits the overlap gap property~\cite{Gamarnik2021}.
 \end{hyp}
 \jinguo{Confirm with Maddie}
@@ -729,9 +729,8 @@ The Hamming distance between two degenerate ground states for different input si
 Since there is no standard approach to model the physical annealing process, we consider a theoretical model for cooling, which is the simulated annealing (SA)~\cite{Kirkpatrick1983} algorithm that detailed in \Cref{app:sa}.
 
 \subsection{Dynamic annealing}\label{cooling-computation-with-moving-heat-bath}
-\jinguo{Please shorten this section!}
 
-
+\subsubsection{Block-wise annealing}
 To overcome the overlap gap property, we propose to do block-wise annealing.
 As shown in \Cref{Surface-programmable-thermodynamic computer}, we divide the lattice into $\frac{M}{W}$ blocks along the time dimension, each having width $W$.
 %by introducing a heat zone with width $W$.
@@ -768,7 +767,7 @@ t_{\rm total} \sim \frac{M}{W}\ln\left(\frac{M}{W}\right)e^{f(W)}.
 
 % The goal is to drive the the \textbf{state} to the one with lowest energy as fast as possible, while some bits set to be 1 or 0 in the \textbf{state}.
 
-\subsubsection{A more realistic heat bath}\label{estimation-of-the-computing-time}
+\subsubsection{Annealing by a moving heat bath}\label{estimation-of-the-computing-time}
 
 %In practice, the heat bath and heat flux should establish a temperature gradient in the system.
 % Suppose the heat bath only connects to a small rectangle region of the system.
@@ -818,12 +817,10 @@ The computing speed $v$ defined as operations per unit time, can be estimated as
 As the computational step $M$ increases, the computing speed $v$ decreases logarithmically.
 
 \section{Numerical simulation}\label{sec:numerical-result}
-
-
-\subsection{Model and Method}
-Given that simulating a CA with a deep computational layer on the Ising model requires many spins, making large-scale numerical simulations impractical, we opted to introduce a similar but simpler energy model to observe the behavior on a larger scale.
-Let us define a simpler but ``equivalent'' energy model on a 2D lattice of size $N \times M$, whose hamiltonian
-is given by
+%Given that simulating a CA with a deep computational layer on the Ising model requires many spins, making large-scale numerical simulations impractical, we opted to introduce a similar but simpler energy model to observe the behavior on a larger scale.
+Instead of studying the spin-glass model directly, we propose a toy energy model to enable large-scale numerical simulations.
+%on a 2D lattice of size $N \times M$.
+The energy model on a 2D lattice of size $N \times M$ is defined as:
 \begin{equation}\label{eq:toy-hamiltonian}
 E(\vn) = \sum_{j=1}^{M-1}\sum_{i=1}^{N} (n_{i+1, j} \land \neg(n_{i, j} \land \neg n_{i-1, j})) \veebar n_{i,j+1},
 \end{equation}
@@ -832,61 +829,56 @@ where $n_{i, j} \in \{0, 1\}$ is the state of the cell at row $i$ and column $j$
 %to be the length of the material along the ``Time'' axis. 
 %Its ground state with energy $0$ also encodes a $110$ CA, where the direction of computation is from the left to right.
 
-When one spin is flipped in the SA, there would be some energy difference
-$\Delta E_{i}$ in field $i$ with temperature $T_i$. 
-We choose the probability to accept this flip to be
-
+Modeling temperature gradient could be achieved by using the following non-equilibrium SA acceptance probability:
 \begin{equation}
     \label{eq:non-equilibrium-SA}
-P = \frac{1}{1 + e^{\sum_i \frac{\Delta E_i}{T_i}}}
+P = \frac{1}{1 + e^{\sum_i \Delta E_i/ T_i}},
 \end{equation}
-
-It is easily to observe that when the system returns to
-heat-equilibrium, the probability reverts to the Glauber dynamics.
-We also provided a more general proof by constructing another equivalent model in \Cref{proof-of_non-equilibrium-SA}.
+where $\Delta E_i$ is the energy change of the $i$-th term in the Hamiltonian and $T_i$ is the temperature of the $i$-th term.
+It is easily to verify that this acceptance probability returns to the Glauber dynamics when $T_i = T$ for all $i$.
+In \Cref{proof-of_non-equilibrium-SA}, we show this non-equilibrilium SA is equivalent to an equilibrilium SA with a layer dependent energy scale.
 
 
 \subsection{Numerical Result}
-\jinguo{show a comparison from right to left}
-
-Here we conducted numerical experiments to examine how the cooling time $T_{c}$ scales with (i)
+Here we conducted numerical experiments to examine how the cooling time $T_{c}$ ($N \times t_{\rm total}$) scales with (i)
 the ``Space'' dimension $N$, (ii) the ``Time'' dimension $M$, (iii) the ``Width'' of the heat zone $W$, and (iv) the temperature gradient $\Lambda$.
 \ym{I have not conducted experiments for (iii) and (iv).}
-We use the number of SA sweeps as the metric to measure the cooling time, which could be determined with the binary search.
-We keep changing the heat bath moving speed $v$ (in unit of columns/sweep) until the system can reach a ground state configuration with $\sim 50\%$ probability.
+If a SA run finds the ground state, we mark it as a success, otherwise, it is a failure.
+The success probability is directly related to the moving speed $v$ of the heat bath.
+The slower the heat bath moves, the higher the success probability.
+We use the number of SA sweeps to reach $50\%$ success probability as the metric to measure the cooling time, which could be obtained by tuning the speed $v$ through binary search.
 
 \begin{figure*}[]
     \centering
     \vspace*{-\topskip}
     \includegraphics[width=\textwidth,keepaspectratio]{../notes/images/main_result.pdf}
-    \caption{Numerical Result. (a) The moving speed $v$ of the heat bath is proportional
+    \caption{Simulated annealing results for the toy model in \Cref{eq:toy-hamiltonian}.
+    (a) The moving speed $v$ of the heat bath is proportional
     to $\ln(M)^{f(\Lambda)}$, where the power function $f(\Lambda)$ can be determined
     by fitting the slope. (b) The total annealing time $T_c$ scales linearly with the
-    number of spins in single layer $N$. (c) The total annealing time $T_c$ with different annealing methods,
+    number of spins in single layer $N$. (c) The total annealing time $T_c$ ($N \times t_{\rm total}$) with different annealing methods,
     including heat bath (HB) moving forward, heat bath (HB) moving backward, Global annealing (GA) with input spins fixed and
     Global annealing (GA) with output spins fixed. The latter three methods are all hard to cool the system.
-    \jinguo{images should use the pdf format, the font size should be larger. Is it possible to verify that the Ising model is similar to the toy model? What is $T$ in the xlabel?}
+    \jinguo{Is it possible to verify that the Ising model is similar to the toy model?}
     \ym{If a comparison between Ising model and toy model is a must, plese inform me.}
-    \jinguo{(1) We should make the lines in (c) fit better with the data points. (2) Please complete the caption. You need to at least explain the short notations: GA, HB. (3) Please use log-scale axes for (a) and (c), instead of taking log directly on the data points. $\ln(\ln(M))$ is difficult to interpret.}}
+    }
     \label{fig:main-numerical-result}
 \end{figure*}
 
 % \jinguo{you need to explain the results... what can we learn from the results?}
-\Cref{fig:main-numerical-result}(a) shows the relationship between
-$\ln(\ln(M))$ and $\ln(v)$ shoule be linear, which implies 
-the time complexity $T_c$ along the ``Time'' direction should scale as $M\ln(M)^{f(\Lambda)}$. 
-We then fit the slopes of each line and $\frac{1}{\ln(\Lambda)}$ and find the 
-empirical constant $c$ in \Cref{eq:total-annealing-time} to be $3$. 
+\Cref{fig:main-numerical-result} (a) shows a polynomial correlation between $\ln(M)$ and $v$. By fitting the curve, we can determine the constant $c$ in \Cref{eq:moving-speed}.
+An empirical value of $c \approx 1/3$ is obtained.
+\Cref{fig:main-numerical-result} (b) shows a linear relationship between $T_c$ and $N$.
+Since in a real TC, a layer is cooled in parallel, the true computing time $t_{\rm total} \sim T_c / N$, which cancels the linear scaling of $N$.
+We conclude that the real computing time does not scale with the computer memory size $N$.
+%we can conclude that the time complexity should scales as $NM\log(M)^{1+\frac{1}{3\ln(\Lambda)}}$, 
+%which is consistent with our theoretical prediction in \Cref{eq:total-annealing-time}.
 
-\Cref{fig:main-numerical-result}(b) shows 
-the the relationship between $T_c$ and $N$ should be linear. Combining these two results, 
-we can conclude that the time complexity should scales as $NM\log(M)^{1+\frac{1}{3\ln(\Lambda)}}$, 
-which is consistent with our theoretical prediction in \Cref{eq:total-annealing-time}.
-
-\Cref{fig:main-numerical-result}(c) compares the time complexity with different annealing
-methods. It costs exponential time to cool the system with the global annealing method no matter
-we set the system to perform a deterministic or non-deterministic computation. Using the blocking
-annealing method to perform a non-deterministic computation is still hard, too.
+\Cref{fig:main-numerical-result}(c) compares different annealing methods for computing from the deterministic direction and the non-deterministic direction.
+The computing time scales exponentially with the number of layers $M$ for all non-deterministic methods, regardless of the direction of computation.
+It is consistent with the computational complexity of the circuit satisfiability problem.
+For the deterministic computation, the global annealing method also takes exponential time, which is consistent with our theoretical prediction in \Cref{hyp:overlap-gap}.
+The heat bath moving forward method is the most efficient, the computing time is almost perfectly linear to $M\ln(M)^{(1+\frac{c}{\ln(\Lambda)})}$.\jinguo{we need to add this plot back, how about using linear axis in figure (c)?}
 
 \jinguo{I hope we can also present some results for the random fluctuation model.
 We just need some quantitative result about how the computing time scales with the depth.
