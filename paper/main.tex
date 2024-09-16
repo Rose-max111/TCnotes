@@ -595,7 +595,7 @@ color(100bp)=(transparent!80) }
     The computation is done by moving the heat zone (orange colored area) from the input surface (left) to the output surface (right) slowly with a constant speed $v$.
     The TC has a translational invariant structure, and each unit cell (inset) is a $110$ rule cellular automata gadget that consists of 5 mutually correlated spins (white circles).
     % \jinguo{please add symbols for space, time and width}
-    \ym{I add symbols. please check if i still need to put original captions here}
+    % \ym{I add symbols. please check if i still need to put original captions here}
     \jinguo{please make the circles and texts in the inset larger}
     }
     
@@ -783,10 +783,16 @@ We have $W'$ scales with the required error probability $\epsilon$ as:
     e^{-\frac{\Delta E}{T_{\rm max}}\Lambda^{cW'}} \sim \epsilon
 \end{equation}
 where $c$ is an empirical constant and can be determined during the experiment. 
-\ym{I am not sure about how to give a concrete definition of the effective width $W'$.}\jinguo{How about this?}
-We have $\log(\Lambda) cW' \sim \log(\frac{T_{\rm max}}{\Delta E}\log(\frac{1}{\epsilon}))$.
+\jinguo{How about this?}
+\ym{But I still don't think the constant $c$ is reasonable in this version. Anyway it is a better 
+description for $W'$.}
 
-Combining with \Cref{eq:totaltime}, the total annealing time can be estimated as
+We can further derive $e^{W'}$ as function of $\Lambda$:
+\begin{equation}
+    e^{\ln(\Lambda)cW'}\sim \ln(\frac{1}{\epsilon})\rightarrow e^{W'}\sim \ln(\frac{1}{\epsilon})^{\frac{1}{c\ln(\Lambda)}}
+\end{equation}
+
+Combining with \Cref{eq:totaltime} and $\epsilon \sim \frac{W'}{M}$, the total annealing time can be estimated as
 \begin{equation}
     \label{eq:total-annealing-time}
     t_{\rm total} \sim \frac{M}{W'}\left(\ln\left(\frac{M}{W'}\right)\right)^{1+ \frac{1}{c\ln(\Lambda)}}
@@ -848,11 +854,15 @@ We keep changing the heat bath moving speed $v$ (in unit of columns/sweep) until
     \centering
     \vspace*{-\topskip}
     \includegraphics[width=\textwidth,keepaspectratio]{../notes/images/main_result.pdf}
-    \caption{Numerical Result.
+    \caption{Numerical Result. (a) The moving speed $v$ of the heat bath is proportional
+    to $\ln(M)^{f(\Lambda)}$, where the power function $f(\Lambda)$ can be determined
+    by fitting the slope. (b) The total annealing time $T_c$ scales linearly with the
+    number of spins in single layer $N$. (c) The total annealing time $T_c$ with different annealing methods,
+    including heat bath (HB) moving forward, heat bath (HB) moving backward, Global annealing (GA) with input spins fixed and
+    Global annealing (GA) with output spins fixed. The latter three methods are all hard to cool the system.
     \jinguo{images should use the pdf format, the font size should be larger. Is it possible to verify that the Ising model is similar to the toy model? What is $T$ in the xlabel?}
     \ym{If a comparison between Ising model and toy model is a must, plese inform me.}
-    \jinguo{(1) We should make the lines in (c) fit better with the data points. (2) Please complete the caption. You need to at least explain the short notations: GA, HB. (3) Please use log-scale axes for (a) and (c), instead of taking log directly on the data points. $\ln(\ln(M))$ is difficult to interpret.}
-    }
+    \jinguo{(1) We should make the lines in (c) fit better with the data points. (2) Please complete the caption. You need to at least explain the short notations: GA, HB. (3) Please use log-scale axes for (a) and (c), instead of taking log directly on the data points. $\ln(\ln(M))$ is difficult to interpret.}}
     \label{fig:main-numerical-result}
 \end{figure*}
 
@@ -895,7 +905,7 @@ We just need some quantitative result about how the computing time scales with t
 %     \end{minipage}
 % \end{figure}
 
-\section{Physical implementation on Ising machine}\label{spin-glass}
+% \section{Physical implementation on Ising machine}\label{spin-glass}
 
 % To examine whether this model could achieve a better performance when
 % using adiabatic methods, we need to generalize this energy function to
