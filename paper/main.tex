@@ -604,7 +604,7 @@ color(100bp)=(transparent!80) }
     The TC has a translational invariant structure, and each unit cell (inset) is a $110$ rule cellular automata gadget that consists of 5 mutually correlated spins (white circles).
     % \jinguo{please add symbols for space, time and width}
     % \ym{I add symbols. please check if i still need to put original captions here}
-    \jinguo{please make the circles and texts in the inset larger}
+    % \jinguo{please make the circles and texts in the inset larger}
     }
     
     \label{Surface-programmable-thermodynamic computer}
@@ -789,9 +789,9 @@ We have $W'$ scales with the required error probability $\epsilon$ as:
 \begin{equation}
     e^{-\frac{\Delta E}{T_{\rm max}}\Lambda^{W'}} \sim \epsilon
 \end{equation}
-\ym{But I still don't think the constant $c$ is reasonable in this version. Anyway it is a better 
-description for $W'$.}
-\jinguo{I changed $c$ to $1/c$}
+% \ym{But I still don't think the constant $c$ is reasonable in this version. Anyway it is a better 
+% description for $W'$.}
+% \jinguo{I changed $c$ to $1/c$}
 
 We can further derive $e^{W'}$ as function of $\Lambda$ by taking the logarithm of both sides:
 \begin{equation}
@@ -810,7 +810,7 @@ The reason why we choose $f$ to be linear is due to the simplicity of the model,
 %However, we failed to find a direct relationship.
 %Numerical result shows that computing complexity is linear to $N$.
 %Thus a total sweep time for the computation should scale as $NM\log^{1 + \frac{c}{\ln(\Lambda)}}(M)$.
-\ym{Please help me to think about how to evaluate the time complexity while $N$ increases.}\jinguo{Leave it to Maddie}
+% \ym{Please help me to think about how to evaluate the time complexity while $N$ increases.}\jinguo{Leave it to Maddie}
 The computing speed $v$ defined as operations per unit time, can be estimated as
 \begin{equation}
     \label{eq:moving-speed}
@@ -818,6 +818,43 @@ The computing speed $v$ defined as operations per unit time, can be estimated as
 \end{equation}
 As the computational step $M$ increases, the computing speed $v$ decreases logarithmically.
 
+\subsubsection{Question about the above theory}
+
+\ym{Please check this part}
+
+We expect the error rate would decrease exponentially with the annealing time while $N, M$ is fixed, i.e. 
+\begin{equation}
+    \ln(\frac{1}{\epsilon}) \propto t_{\rm total}
+\end{equation}
+
+However, we found that the error rate is only inversely proportional to the annealing time, i.e,
+$\frac{1}{\epsilon} \propto t_{\rm total}$. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/eps_vs_t.pdf}
+    \caption{(a): The error rate $\epsilon$ scales inversely with the total annealing time $t_{\rm total}$, which is different from the expected exponential scaling.
+    (b): The log plot implies that $\ln(v)$ is linear to $\ln(M)$, which then implies $v \propto (\frac{1}{M})^{b}$, where $b$
+    is the slope of the line.}
+    \label{questionplot}
+\end{figure}
+
+\Cref{questionplot}(b) shows that the moving speed $v$ is at least proportional to $\frac{1}{M}$,
+ which means we need at least $O(M^2)$ time to achieve a fixed error rate. This is correspond to the relationship
+ between $\epsilon$ and $t_{\rm total}$ when $N, M$ is fixed.
+
+The main problem is that $\epsilon$ does not obey the hypothesis that it decreases exponentially with the annealing time.
+We come up with this hypothesis based on the intuition that the sampling procedure is a Markov chain, 
+the proportion of the non-steady-state distribution should decrease exponentially with the number of samples. 
+
+\ym{I think this hypothesis make sense, but how to check whether the code is correct or not?
+I set a minimum temperature of $10^{-5}$ in simulation. Should this be the reason?}
+
+This problem has nothing to do with the temperature distribution model. Same relationship between
+$v$ and $M$ also exist when we choose to anneal this system with a gaussian type temperature distribution.
+
+
+\iffalse
 \section{Numerical simulation}\label{sec:numerical-result}
 %Given that simulating a CA with a deep computational layer on the Ising model requires many spins, making large-scale numerical simulations impractical, we opted to introduce a similar but simpler energy model to observe the behavior on a larger scale.
 Instead of studying the spin-glass model directly, we propose a toy energy model to enable large-scale numerical simulations.
@@ -903,6 +940,8 @@ We just need some quantitative result about how the computing time scales with t
 %         \label{fig:image2}
 %     \end{minipage}
 % \end{figure}
+
+\fi
 
 % \section{Physical implementation on Ising machine}\label{spin-glass}
 
