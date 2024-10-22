@@ -70,29 +70,32 @@
 }
 
 Improving the energy efficiency of computation is a major challenge in the development of future computing systems.
-The thermodynamic computer (TC)~\cite{conte2019thermodynamic, hylton2021vision} is a new type of computer that uses thermodynamics to perform computation.
+One of the attempts to improve the energy efficiency is building a thermodynamic computer (TC)~\cite{conte2019thermodynamic, hylton2021vision}.
 Instead of performing the computation deterministically, TCs are stochastic and are driven by thermodynamics.
-Physical implementations of TCs include DNA machines~\cite{tanaka2005design} and Ising machines~\cite{gu2012encoding, lucas2014ising, mohseni2022ising, fabre2014optical}.
 % memristors~\cite{yang2013memristive, wang2017memristors, kumar2017chaotic, wang2018fully}, 
-
-The computational process of TCs utilizes the tendency of a physical system to evolve towards the state with the lowest free energy.
-By manipulating the minimum free energy state of the system, the computation can be performed.
-The change of free energy minimum state can be achieved by changing the distribution of the particles in the system, such as in the case of DNA machines~\cite{Feynman2018} or lowering the temperature of the system, such as in the case of Ising machines~\cite{boixo2013experimental}.
+It utilizes the tendency of a physical system to evolve towards the state with the lowest free energy.
+By manipulating the minimum free energy state of the system, the computation can be performed probabilistically and energy efficiently.
+It can be achieved by changing the distribution of the particles in the system, such as in the case of DNA machines~\cite{Feynman2018, tanaka2005design}, or lowering the temperature of the system, such as in the case of Ising machines~\cite{boixo2013experimental, gu2012encoding, lucas2014ising, mohseni2022ising, fabre2014optical}.
 The former is known as the Brownian machine, which evolves the system toward the direction of the entropy increase, while the latter are energy based, which evolves the system toward the direction of the energy decrease.
 
-In this work, we focus on the energy based models, which are one of the most powerful models for computation.
-For example, the Ising model can formulate any problems in NP~\cite{gu2012encoding, lucas2014ising,mohseni2022ising}.
-However, Ising models with random coupling are notoriously hard to thermalize, even with the help of quantum entanglement~\cite{boixo2013experimental, boixo2014evidence, Pichler2018, Ebadi2022, Nguyen2023}.
-%There is no evidence yet that they can significantly outperform existing algorithms run on classical computers~\cite{}.
+In this work, we focus on the energy based models.
+They are one of the most powerful models for computation as the ground states of which can encode the solution of any problems in NP~\cite{Moore2011, gu2012encoding, lucas2014ising,mohseni2022ising} - the decision problems that can be verified in time polynomial to the size of the problem.
+However, ground state finding in these models is generally hard due to the frustration caused by the interactions.
+Although there are evidence that quantum entanglement can help improve the performance by some polynomial~\cite{boixo2014evidence,Grover1992,Pichler2018, Ebadi2022, Nguyen2023}, solving the problem in polynomial time is still intractable in any physical system~\cite{Bernstein1993}.
+The hardness of thermalization an object is just like other fundamental law of thermodynamics, blocking us from building some interesting ``machines''.
+This time, the interesting machine is an Ising machine that always thermalizes in polynomial time - if can be built, even theorem proving can be trivialized~\cite{Moore2011}.
 
-Can we utilize a natural energy based model for efficient computation?
-Intrigued by this question, we designed an energy based TC as a translational invariant Ising model with universal computation capability on its surface, and study how to efficiently thermalize the system to perform computation.
-Our TC implements a universal elementary CA, the translational invariance in both time and space dimension mimics a crystal in nature, which also eases the study of the scaling behaviors the thermalization process.
+Then which subset of Ising machines that can be efficiently thermalized, and can some of them used for efficient universal computation?
+Intrigued by this question, we designed an energy based TC as a translational invariant Ising model. It has universal computational capability on its surface, i.e. the program can be encoded by editing its surface configuration.
+With this model, we study how to efficiently thermalize the system to perform computation.
+Our TC embeds the evolution of a universal elementary cellular automata (CA)~\cite{Wolfram1983} into a two mensional grid, the translational invariance in both time and space dimension enables us to systematically study the scaling behaviors the thermalization process.
+We hope this study can provide some intuition for future design of TC.
 
-In the rest of this paper, we first show the design of crystalline structure that can be programmed on its surfaces to perform universal computation in \Cref{sec:Overview-of-main-results}.
-The method we use to study the thermalization process is introduced in \Cref{sec:model-method}.
-Finally, we reported numerical simulation results in \Cref{sec:numerical-result}. We show that even when the encoded problem is a deterministic computation, the system is not guaranteed to thermalize in time polynomial to the size of the crystal.
-However, if we use the moving temperature gradient method, the system can thermalize in time almost linear to the size of the crystal, i.e. as efficient as a normal computer.
+In the rest of this paper, we first show the general idea of the thermal computer in \Cref{sec:Overview-of-main-results}.
+The details are introduced in \Cref{sec:model-method}.
+Finally, we reported numerical simulation results in \Cref{sec:numerical-result}.
+%We show that even when the encoded problem is a deterministic computation, the system is not guaranteed to thermalize in time polynomial to the size of the crystal.
+%However, if we use the moving temperature gradient method, the system can thermalize in time almost linear to the size of the crystal, i.e. as efficient as a normal computer.
 
 
 % The way to lower the free energy is inspired by the process of crystalization.
