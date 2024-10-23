@@ -61,13 +61,16 @@
 
 \section{Introduction}
 
-\jinguo{}
+\jinguo{
+    TODO: list some questions for discussion with Monte Carlo expert.
+}
 \ym{Need to add a brief summary about the state-of-the-art TCs. Following is some basic summaries of references
 \begin{enumerate}
     \item Discussed the architecture of future thermodynamic computer and brought up an idea about the understanding of using TC to solve problems~\cite{hylton2021vision}.
     \item TODO: search for gadgets for array multiplier.
 \end{enumerate}
 }
+\jinguo{We either discuss general TC, and then gadget design, or use the spin glass model in our study.}
 
 Improving the energy efficiency of computation is a major challenge in the development of future computing systems.
 One of the attempts to improve the energy efficiency is building a thermodynamic computer (TC)~\cite{conte2019thermodynamic, hylton2021vision}.
@@ -135,11 +138,19 @@ Finally, we reported numerical simulation results in \Cref{sec:numerical-result}
 %Other type of TCs like memristors~\cite{yang2013memristive, wang2017memristors, kumar2017chaotic,wang2018fully}, DNA machine~\cite{tanaka2005design}. 
 
 
-
+\jinguo{
+    \begin{enumerate}
+        \item discuss the spacial encoding of the CA.
+        \item discuss the thermalization of this model.
+    \end{enumerate}
+}
 
 \section{Overview of the computation model}\label{sec:Overview-of-main-results}
-The TC we are proposing is shown in \Cref{Surface-programmable-thermodynamic computer}. It features a crystalline structure that encodes the time evolution of a universal CA that capable of performing universal computation.
-To encode a $d$-dimensional CA, we need a $d+1$-dimensional crystal. The extra dimension is used to encode the time-axis of the CA.
+In the proposed TC, we embed a $d$-dimensional CA into a $d+1$-dimensional energy model, where the extra dimension is used to encode the time-evolution of the CA.
+The TC has a translational invariant structure, as shown in \Cref{Surface-programmable-thermodynamic computer}.
+The state transition of the CA can be represented by a logic gate, which is encoded in the unit cell of the grid.
+Each unit cell is associated with an energy model, which is an Ising model in our case. The ground state of which is associated with the state transition encoded in the logic gate.
+
 For simplicity, we will focus on the one dimensional 110 rule elementary CA in the rest of this paper.
 The physical implementation of the TC is based on the Ising model, where we use the spin up and down to encode the state $1$ and $0$ of the cellular automata, respectively. The energy of the Ising model is designed to be minimized when the spins are in the state that satisfies the rule 110 cellular automata, which can be achieved by constructing the rule 110 gadget shown in the inset of \Cref{Surface-programmable-thermodynamic computer}.
 
