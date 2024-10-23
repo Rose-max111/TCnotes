@@ -151,6 +151,14 @@ The TC has a translational invariant structure, as shown in \Cref{Surface-progra
 The state transition of the CA can be represented by a logic gate, which is encoded in the unit cell of the grid.
 Each unit cell is associated with an energy model, which is an Ising model in our case. The ground state of which is associated with the state transition encoded in the logic gate.
 
+
+\section{Overview of the computation model}\label{sec:Overview-of-main-results}
+The TC we are proposing is shown in \Cref{Surface-programmable-thermodynamic computer}. It features a crystalline structure that encodes the time evolution of a universal CA that capable of performing universal computation.
+To encode a $d$-dimensional CA, we need a $d+1$-dimensional crystal. The extra dimension is used to encode the time-axis of the CA.
+
+
+
+
 For simplicity, we will focus on the one dimensional 110 rule elementary CA in the rest of this paper.
 The physical implementation of the TC is based on the Ising model, where we use the spin up and down to encode the state $1$ and $0$ of the cellular automata, respectively. The energy of the Ising model is designed to be minimized when the spins are in the state that satisfies the rule 110 cellular automata, which can be achieved by constructing the rule 110 gadget shown in the inset of \Cref{Surface-programmable-thermodynamic computer}.
 
