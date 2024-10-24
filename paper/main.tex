@@ -64,13 +64,24 @@
 \jinguo{
     TODO: list some questions for discussion with Monte Carlo expert.
 }
-\ym{Need to add a brief summary about the state-of-the-art TCs. Following is some basic summaries of references
-\begin{enumerate}
-    \item Discussed the architecture of future thermodynamic computer and brought up an idea about the understanding of using TC to solve problems~\cite{hylton2021vision}.
-    \item TODO: search for gadgets for array multiplier.
-\end{enumerate}
+
+\ym{
+    \begin{enumerate}
+        \item There are many discussion about the relation between the sampling time and 
+        the ``quasi-equilibrilium-distribution''. However, here we don't need it to be so close
+        to the equilibrilium-distribution. How to quantify the relation between sampling time and error rate?
+
+        \item We thought the error rate should decrease expoenentially with the sampling time in conventional SA
+        however, numerical results does not support our hypothesis. Why?
+    \end{enumerate}
 }
-\jinguo{We either discuss general TC, and then gadget design, or use the spin glass model in our study.}
+% \ym{Need to add a brief summary about the state-of-the-art TCs. Following is some basic summaries of references
+% \begin{enumerate}
+%     \item Discussed the architecture of future thermodynamic computer and brought up an idea about the understanding of using TC to solve problems~\cite{hylton2021vision}.
+%     \item TODO: search for gadgets for array multiplier.
+% \end{enumerate}
+% }
+% \jinguo{We either discuss general TC, and then gadget design, or use the spin glass model in our study.}
 
 Improving the energy efficiency of computation is a major challenge in the development of future computing systems.
 One of the attempts to improve the energy efficiency is building a thermodynamic computer (TC)~\cite{conte2019thermodynamic, hylton2021vision}.
@@ -712,19 +723,20 @@ The inputs are encoded in the spins on the left surface.
 To fix an input to $0$ or $1$, we raise or lower the external field $h_i$ by $\Delta_{in}>0$.
 Similarly, we can also set the outputs by raising or lowering the energy of spins on the right surface.
 %Each ground states corresponds to a solution to the encoded circuit satisfaction problem if the target circuit is satisfiable.
-We denote the computation from the left to the right as the \emph{deterministic computation}, and the computation from the right to the left as the \emph{non-deterministic computation}.
+We denote the computing process starting from a fixed input as the \emph{deterministic computation}, and the those starting from a fixed output as the \emph{non-deterministic computation}.
 
 \subsection{Compute by annealing}\label{simulated-annealing-algorithm}
 
-With the proposed Ising model, we are interested in how efficiently we can drive the system to the ground state, which encodes the output of the CA.
-In contrast with a traditional computation model, cooling an energy model does not have a specific direction.
-It can be done from the input to the output, from the output to the input or neither.
-Intuitively, cooling the deterministic computation is much easier than cooling the non-deterministic computation.
+We consider annealing as the evolving dynamics of the system and are interested in how efficiently it can be to perform the computation.
+The noticeable difference between the annealing computation and the conventional computation is that the former does not care about the ``computing direction''.
+Intuitively, annealing to perform the deterministic computation is much easier than to perform the non-deterministic computation.
 Since the latter encodes the circuit satisfaction problem, which is NP-hard, while the former is a simple linear-time computation.
-However, this is not always the case.
-Global cooling by gradually lowering the temperature (or annealing), as in the Ising machine~\cite{fabre2014optical}, may still hard for a deterministic computation, no matter how large the input detuning $\Delta_{in}$ is.
-It can be rigorous proved that the cooling process is hard if the energy landscape of the optimization problem exhibits the overlap gap property~\cite{Gamarnik2021}. If a problem has the overlap gap property, then it can not be solved by any local algorithms in time polynomial to the system size, including both the physical annealing and the simulated annealing method used in this work.
 
+However, this is not always the case.
+Global annealing by gradually lowering the temperature, as the Ising machine~\cite{fabre2014optical}, may still be hard for a deterministic computation, no matter how large the input detuning $\Delta_{in}$ is.
+It can be rigorous proved that the annealing process remains difficult for driving the system to a ground state if the energy landscape of the optimization problem exhibits the overlap gap property~\cite{Gamarnik2021}, 
+which means it cannot be solved by any local algorithms in polynomial time with respect to the system size, including both physical annealing and the simulated annealing method used in this work.
+\ym{Any reference for the previous hypothesis ``...cannot be solve...''}
 %In the following article, denote one sweep as the process of trying to flip each spin at its local temperature.
 
 % \ym{
@@ -736,32 +748,38 @@ It can be rigorous proved that the cooling process is hard if the energy landsca
 \begin{hyp}\label{hyp:overlap-gap}
 Let $\mathcal{P}$ be a circuit SAT problem, and $\mathcal{E}$ be an energy modeling encoding of $\mathcal{P}$ (locally). There exists a subset of $\mathcal{E}$ that exhibits the overlap gap property~\cite{Gamarnik2021}.
 \end{hyp}
-\jinguo{Confirm with Maddie}
-The overlap gap property is a property for describing the algorithmic intractability in random structures, which is based on the topological disconnectivity property of the set of pair-wise distances of near optimal solutions.
-If the energy landscape of a optimization problem exhibits the overlap gap property, then it can not be solved by any local algorithms in polynomial time, including the simulated annealing method used in this work.
-The intuition comes from the energy model encoding of the identity circuit.
-Given a circuit with $n$ bits, the ground state degeneracy of the corresponding energy model is at least $2^n$.
-The energy model can be vertically stacked $n$ copy gadgets.
-Let the circuit depth be $d \sim 2^{\gamma \sqrt{n}}$ for some constant $\gamma > 0$.
-The Hamming distance between two degenerate ground states for different input signals is at least $d$, which is exponential to $n$. Let us define the size of the problem as $d\times n$, then this distance is clearly linear to the problem size. We left the rigorous proof of this hypothesis to mathematicians.
+% \jinguo{Confirm with Maddie}
+\ym{I don't understand the following sentence. ``...set of ...'' seems weird.}
+The overlap gap property describes the algorithmic intractability in random structures, which is based on the topological disconnectivity of the set of pair-wise distances of near optimal solutions.
+% If the energy landscape of an optimization problem exhibits the overlap gap property, then it can not be solved by any local algorithms in polynomial time, including the simulated annealing method used in this work.
+The intuition of the hypothesis comes from the energy model encoding of the identity circuit.
+% Given a circuit with $n$ input bits, the ground state degeneracy of the corresponding energy model is at least $2^n$.
+Consider the simplest model consisting of vertically stacked $n$ copy gadgets, where each gadgets consists of $d \sim 2^{\gamma \sqrt{n}}$ copy gates.
+There are at least $2^n$ degenerate ground states in this model, and the Hamming distance between any two different ground states is at least $d$, which is exponential to $n$. Let us define the size of the problem as $d\times n$, then this distance is clearly linear to the problem size,
+which means  it exhibits the overlap gap property. 
+We left the rigorous proof of this hypothesis to mathematicians.
 
-Since there is no standard approach to model the physical annealing process, we consider a theoretical model for cooling, which is the simulated annealing (SA)~\cite{Kirkpatrick1983} algorithm that detailed in \Cref{app:sa}.
+Since there is no standard approach to model the physical annealing process, we consider a theoretical model for the dynamics, which is the simulated annealing (SA)~\cite{Kirkpatrick1983} algorithm that detailed in \Cref{app:sa}.
 
 \subsection{Dynamic annealing}\label{cooling-computation-with-moving-heat-bath}
 
 \subsubsection{Block-wise annealing}
+
+
 To overcome the overlap gap property, we propose to do block-wise annealing.
 As shown in \Cref{Surface-programmable-thermodynamic computer}, we divide the lattice into $\frac{M}{W}$ blocks along the time dimension, each having width $W$.
 %by introducing a heat zone with width $W$.
 %It represents the region of the system that interacts with the heat bath, as shown in \Cref{Surface-programmable-thermodynamic computer}.
 %Let layer $i$ be defined as the set of spins with x-coordinate $i$.
-These blocks are initialized to a low enough temperature, so that the spins freeze into a random local minimum.
-Then we anneal these blocks sequentially from left to right by heating up a block to a temperature higher than the energy scale and then cooling it down.
+These blocks are initialized to a low enough temperature, so that the spins are freezed into a random configuration.
+
+We anneal these blocks sequentially from left to right by heating up a block to a temperature higher than the energy scale and then cooling it down.
 %We treat it as an ideal bath as it maintains a space-invariant temperature within the heat zone while keeping other regions at zero temperature.
-Given a slow enough cooling rate, the spins in the block will settle into the global ground state.
-The cooling rate determines the true computing speed of this model.
-It must scale with the number of computational steps $M$, otherwise, the probability of success will exponentially decrease with the number of blocks.
-How cooling rate should scale with $M$ becomes a key question in this work.
+Given a slow enough cooling rate, the spins in the block will settle into the local ground state of this block.
+This sequential annealing process would not introduce frustration between blocks since there always exists a global ground state.
+% The cooling rate determines the true computing speed of this model.
+% It must scale with the number of computational steps $M$, otherwise, the probability of success will exponentially decrease with the number of blocks.
+% How cooling rate should scale with $M$ becomes a key question in this work.
 
 Assume the SA procedure in each block has an error probability $\epsilon$.
 Repeating the procedure in $\frac{M}{W}$ blocks results in a success probability of $(1 - \epsilon)^{\frac{M}{W}}$ for finding the global ground state. 
@@ -773,6 +791,10 @@ The scaling behavior of $\Delta$ and block size $W$ can be complicated, in the w
     \label{eq:spectral-gap}
     \Delta \sim e^{-f(W)},
 \end{equation}
+
+[{\color{red}{**WARNING**: $(1-\Delta)^{t_{th}} = \epsilon$ doesn't match the numerical results. Please check
+part ``Error rate in one block'' for details }}]
+
 where $f(W)$ is a polynomial of $W$. Consequently, $t_{th}$ is related to $\epsilon$ by $\left( 1-\Delta \right) ^ {t_{th}} = \epsilon$, which gives $t_{th} \sim \ln\left(\frac{M}{W}\right)e^{f(W)}$, and the total sweep times scale as:
 \begin{equation}\label{eq:totaltime}
 t_{\rm total} \sim \frac{M}{W}\ln\left(\frac{M}{W}\right)e^{f(W)}.
@@ -788,9 +810,11 @@ t_{\rm total} \sim \frac{M}{W}\ln\left(\frac{M}{W}\right)e^{f(W)}.
 
 \subsubsection{Annealing by a moving heat bath}\label{estimation-of-the-computing-time}
 
+[{\color{red}{**WARNING**: Because of the error in the previous section, the following part is also wrong}}]
+
 %In practice, the heat bath and heat flux should establish a temperature gradient in the system.
 % Suppose the heat bath only connects to a small rectangle region of the system.
-Instead of block-wise annealing, we propose to move the heat bath from the left surface to the right surface at a constant speed $v$.
+Instead of block-wise annealing, we propose to do a similar sequential annealing by moving a heat bath from the left surface to the right surface at a constant speed $v$.
 At time $t$, the temperature distribution $T$ is given by $T_{\rm max}\Lambda^{-|x - vt|}$, where $x$ is the computational step, $T_{\rm max}$ is the maximum temperature and $\Lambda > 1$ is a constant that determines the width of the heat zone.
 %The temperature $T(x, t)$  at a position with x-coordinate  $x$  and time  $t$  can be modeled as  $T(x, t) \propto \Lambda^{-|x - L(t)|}$ , 
 %where $\Lambda$ is a heat flux constant and $L(t)$ denotes the center of the heat bath at time $t$.
@@ -835,11 +859,55 @@ The computing speed $v$ defined as operations per unit time, can be estimated as
 \end{equation}
 As the computational step $M$ increases, the computing speed $v$ decreases logarithmically.
 
-\subsubsection{Question about the above theory}
+\section{Numerical results}
 
-\ym{Please check this part}
+%Given that simulating a CA with a deep computational layer on the Ising model requires many spins, making large-scale numerical simulations impractical, we opted to introduce a similar but simpler energy model to observe the behavior on a larger scale.
+Instead of studying the spin-glass model directly, we propose a toy energy model to enable large-scale numerical simulations.
+%on a 2D lattice of size $N \times M$.
+The energy model on a 2D lattice of size $N \times M$ is defined as:
+\begin{equation}\label{eq:toy-hamiltonian}
+E(\vn) = \sum_{j=1}^{M-1}\sum_{i=1}^{N} (n_{i+1, j} \land \neg(n_{i, j} \land \neg n_{i-1, j})) \veebar n_{i,j+1},
+\end{equation}
+where $n_{i, j} \in \{0, 1\}$ is the state of the cell at row $i$ and column $j$, the lattice is periodic in the space direction, i.e. $n_{0, t} = n_{N, j}$.
+%$S$ to be the length of the material along the ``Space'' axis, $D$
+%to be the length of the material along the ``Time'' axis. 
+%Its ground state with energy $0$ also encodes a $110$ CA, where the direction of computation is from the left to right.
 
-We expect the error rate would decrease exponentially with the annealing time while $N, M$ is fixed, i.e. 
+Modeling temperature gradient could be achieved by using the following non-equilibrium SA acceptance probability:
+\begin{equation}
+    \label{eq:non-equilibrium-SA}
+P = \frac{1}{1 + e^{\sum_i \Delta E_i/ T_i}},
+\end{equation}
+where $\Delta E_i$ is the energy change of the $i$-th term in the Hamiltonian and $T_i$ is the temperature of the $i$-th term.
+It is easily to verify that this acceptance probability returns to the Glauber dynamics when $T_i = T$ for all $i$.
+In \Cref{proof-of_non-equilibrium-SA}, we show this non-equilibrilium SA is equivalent to an equilibrilium SA with a layer dependent energy scale.
+
+
+
+\subsection{Error rate in one block}
+
+We first test the hypothesis mentioned in block-wise annealing. It claims that the error rate 
+should decrease exponentially with the time $t_{th}$ the Markov transition matrix is applied.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\columnwidth,keepaspectratio]{../notes/images/eps_vs_t_directannealing.pdf}
+    \caption{The error rate $\epsilon$ does not decrease exponentially with the total annealing time $t_{th}$
+    }
+    \label{questionplot_directannealing}
+\end{figure}
+
+We set a beginning temperature of $T_{max} = 10$ and a final temperature of $T_{min} = 10^{-5}$.
+There are $t_{th}$ flip step in total, the temperature at step $i$ is given by $T_i = T_{max} + (T_{min} - T_{max})\frac{i}{t_{th}}$, and we perform
+a flip try to each spin respectively at each time step. The block size is set to be $N = M = 7$. 
+Denote one sample is error if the energy of the final state after step $t_{th}$ is not the ground state energy.
+
+Finally, we examine the error rate $\epsilon$ as a function of the total annealing time $t_{th}$.
+However, as \Cref{questionplot_directannealing} shows, it at least does not decrease exponentially with $t_{th}$.
+
+\subsection{Error rate in the moving heat bath}
+
+We also expect the error rate would decrease exponentially with the annealing time while $N, M$ is fixed, i.e. 
 \begin{equation}
     \ln(\frac{1}{\epsilon}) \propto t_{\rm total}
 \end{equation}
@@ -860,15 +928,75 @@ $\frac{1}{\epsilon} \propto t_{\rm total}$.
  which means we need at least $O(M^2)$ time to achieve a fixed error rate. This is correspond to the relationship
  between $\epsilon$ and $t_{\rm total}$ when $N, M$ is fixed.
 
-The main problem is that $\epsilon$ does not obey the hypothesis that it decreases exponentially with the annealing time.
-We come up with this hypothesis based on the intuition that the sampling procedure is a Markov chain, 
-the proportion of the non-steady-state distribution should decrease exponentially with the number of samples. 
+% The main problem is that $\epsilon$ does not obey the hypothesis that it decreases exponentially with the annealing time.
+% We come up with this hypothesis based on the intuition that the sampling procedure is a Markov chain, 
+% the proportion of the non-steady-state distribution should decrease exponentially with the number of samples. 
 
-\ym{I think this hypothesis make sense, but how to check whether the code is correct or not?
-I set a minimum temperature of $10^{-5}$ in simulation. Should this be the reason?}
+% \ym{I think this hypothesis make sense, but how to check whether the code is correct or not?
+% I set a minimum temperature of $10^{-5}$ in simulation. Should this be the reason?}
 
 This problem has nothing to do with the temperature distribution model. Same relationship between
 $v$ and $M$ also exist when we choose to anneal this system with a gaussian type temperature distribution.
+
+\subsection{Main Result}
+Here we conducted numerical experiments to examine how the cooling time $T_{c}$ ($N \times t_{\rm total}$) scales with (i)
+the ``Space'' dimension $N$, (ii) the ``Time'' dimension $M$, (iii) the ``Width'' of the heat zone $W$, and (iv) the temperature gradient $\Lambda$.
+% \ym{I have not conducted experiments for (iii) and (iv).}
+If a SA run finds the ground state, we mark it as a success, otherwise, it is a failure.
+The success probability is directly related to the moving speed $v$ of the heat bath.
+The slower the heat bath moves, the higher the success probability.
+We use the number of SA sweeps to reach $50\%$ success probability as the metric to measure the cooling time, which could be obtained by tuning the speed $v$ through binary search.
+
+\begin{figure*}[]
+    \centering
+    \vspace*{-\topskip}
+    \includegraphics[width=\textwidth,keepaspectratio]{../notes/images/main_result.pdf}
+    \caption{Simulated annealing results for the toy model in \Cref{eq:toy-hamiltonian}.
+    (a) The log plot implies that $\ln(v)$ is linear to $\ln(M)$, which then implies $v \propto (\frac{1}{M})^{b}$, where $b$
+    is the slope of the line. (b) The total annealing time $T_c$ scales linearly with the
+    number of spins in single layer $N$. (c) The total annealing time $T_c$ ($N \times t_{\rm total}$) with different annealing methods,
+    including heat bath (HB) moving forward, heat bath (HB) moving backward, Global annealing (GA) with input spins fixed and
+    Global annealing (GA) with output spins fixed. The latter three methods are all hard to cool the system.
+    }
+    \label{fig:main-numerical-result}
+\end{figure*}
+
+% \jinguo{you need to explain the results... what can we learn from the results?}
+\Cref{fig:main-numerical-result} (a) shows a polynomial correlation between $\ln(M)$ and $\ln(v)$, which then
+implies $v \propto (\frac{1}{M})^{b}$, where $b$ is the slope of the line. It then comes that $T_{c} = \frac{M}{v} \propto M^2$, which does not match our theory.
+\Cref{fig:main-numerical-result} (b) shows a linear relationship between $T_c$ and $N$.
+Combining the above two results, we can conclude that, from numerical sight, the time complexity should at least scales as $O(NM^2)$.
+%we can conclude that the time complexity should scales as $NM\log(M)^{1+\frac{1}{3\ln(\Lambda)}}$, 
+%which is consistent with our theoretical prediction in \Cref{eq:total-annealing-time}.
+
+\Cref{fig:main-numerical-result}(c) compares different annealing methods for computing from the deterministic direction and the non-deterministic direction.
+The computing time scales exponentially with the number of layers $M$ for all non-deterministic methods, regardless of the direction of computation.
+It is consistent with the computational complexity of the circuit satisfiability problem.
+For the deterministic computation, the global annealing method also takes exponential time, which is consistent with our theoretical prediction in \Cref{hyp:overlap-gap}.
+The heat bath moving forward method is the most efficient.
+% \jinguo{we need to add this plot back, how about using linear axis in figure (c)?}
+
+% \jinguo{I hope we can also present some results for the random fluctuation model.
+% We just need some quantitative result about how the computing time scales with the depth.
+% }
+% \ym{This experiment can be conducted together with the verification of the similarity between the Ising model and the toy model.}
+
+% \begin{figure}[h]
+%     \centering
+%     \begin{minipage}[b]{0.485\columnwidth}
+%         \centering
+%         \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/TimeComplexityalongTaxis.png}
+%         \caption{Time v.s. Depth of the material}
+%         \label{fig:image1}
+%     \end{minipage}
+%     \hspace{0.001\columnwidth} % 两张图片之间的水平间距
+%     \begin{minipage}[b]{0.485\columnwidth}
+%         \centering
+%         \includegraphics[width=\columnwidth,keepaspectratio]{../notes/images/toymodel_time_vs_width.png}
+%         \caption{Time v.s. width of the material}
+%         \label{fig:image2}
+%     \end{minipage}
+% \end{figure}
 
 
 \iffalse
@@ -972,11 +1100,11 @@ We just need some quantitative result about how the computing time scales with t
 
 
 
-\section{Discussion and Outlook}
-Connect real-world thermalization time and the simulated annealing time to explore the connection between time and energy cost per computation.
-The emergence of wisdom?
+% \section{Discussion and Outlook}
+% Connect real-world thermalization time and the simulated annealing time to explore the connection between time and energy cost per computation.
+% The emergence of wisdom?
 
-Potential advantages: energy saving, parallelism, no size limits (robust to quantum effects). Disadvantages: slow, error-prone.
+% Potential advantages: energy saving, parallelism, no size limits (robust to quantum effects). Disadvantages: slow, error-prone.
 
 \begin{acknowledgments}
     %We thank Lei Wang, Madelyn Cain and XXX for helpful discussions on the simulation methods.
