@@ -61,13 +61,16 @@
 
 \section{Introduction}
 
-\jinguo{}
+\jinguo{
+    TODO: list some questions for discussion with Monte Carlo expert.
+}
 \ym{Need to add a brief summary about the state-of-the-art TCs. Following is some basic summaries of references
 \begin{enumerate}
     \item Discussed the architecture of future thermodynamic computer and brought up an idea about the understanding of using TC to solve problems~\cite{hylton2021vision}.
     \item TODO: search for gadgets for array multiplier.
 \end{enumerate}
 }
+\jinguo{We either discuss general TC, and then gadget design, or use the spin glass model in our study.}
 
 Improving the energy efficiency of computation is a major challenge in the development of future computing systems.
 One of the attempts to improve the energy efficiency is building a thermodynamic computer (TC)~\cite{conte2019thermodynamic, hylton2021vision}.
@@ -135,13 +138,57 @@ Finally, we reported numerical simulation results in \Cref{sec:numerical-result}
 %Other type of TCs like memristors~\cite{yang2013memristive, wang2017memristors, kumar2017chaotic,wang2018fully}, DNA machine~\cite{tanaka2005design}. 
 
 
+\jinguo{
+    \begin{enumerate}
+        \item discuss the spacial encoding of the CA.
+        \item discuss the thermalization of this model.
+    \end{enumerate}
+}
 
+%Users can design the computing algorithm and obtain the desired output by setting the input configuration and then making slight movements to the external heat bath, requiring only approximately linear time (up to a $\log^2$ factor) with respect to the number of layers.
 
-\section{Overview of the computation model}\label{sec:Overview-of-main-results}
-The TC we are proposing is shown in \Cref{Surface-programmable-thermodynamic computer}. It features a crystalline structure that encodes the time evolution of a universal CA that capable of performing universal computation.
-To encode a $d$-dimensional CA, we need a $d+1$-dimensional crystal. The extra dimension is used to encode the time-axis of the CA.
-For simplicity, we will focus on the one dimensional 110 rule elementary CA in the rest of this paper.
-The physical implementation of the TC is based on the Ising model, where we use the spin up and down to encode the state $1$ and $0$ of the cellular automata, respectively. The energy of the Ising model is designed to be minimized when the spins are in the state that satisfies the rule 110 cellular automata, which can be achieved by constructing the rule 110 gadget shown in the inset of \Cref{Surface-programmable-thermodynamic computer}.
+\section{Model and Method}\label{sec:model-method}
+
+\subsection{Elementary cellular automata}\label{elementary-cellular-automata}
+In cellular automata (CA), ``space'' is a regular lattice of ``cells'', each of which contains an integer from a small set.
+Only cells that are close together interact in one ``time-step'' - the time evolution is given by a rule that looks at the contents of a few neighbouring cells, and decides what should change. At each step, this local rule is applied everywhere simultaneously~\cite{Margolus1984}.
+Depending on the local rule, some CAs can be more interesting than others.
+The most interesting category is those proven to be universal~\cite{Berlekamp2004}, meaning that they can simulate any computer program. The best-known examples in two-dimensional include Conway's~\cite{Games1970} ``Game of Life'', Margolus's reversible CA~\cite{Margolus1984} and the quantum block cellular automata~\cite{Arrighi2012}.
+
+Interestingly, even on a one dimension lattice, we can construct universal CAs.
+The simplest among which is the rule 110 elementary CA~\cite{Cook2009}.%, which is also the first proved universal elementary CA.
+An elementary CA is defined on a one dimensional lattice, each site can contain state 0 or 1.
+The rule of an elementary CA to determine the state of the cell in next generation depends only on the current state of the cell and its two immediate neighbors,
+hence the number of possible elementary CA rules is equal to the number of 3-input Boolean functions, which is $2^{2^3} = 256$.
+The Boolean function for rule 110 is shown in the following table:
+
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Current Pattern & 111 & 110 & 101 & 100 & 011 & 010 & 001 & 000 \\
+\hline
+New Center Cell & 0 & 1 & 1 & 0 & 1 & 1 & 1 & 0 \\
+\hline
+\end{tabular}
+
+The name of the rule comes from the binary representation of the rule number, which is 110 in decimal.
+Let us denote the states of the three cells as $p$, $q$, and $r$, from left to right, respectively. The rule 110 can be expressed as the following Boolean function:
+\begin{equation}\label{eq:110rule}
+    q^\prime = r \land \neg (q \land \neg p)
+\end{equation}
+where $q^\prime$ is the state of the center cell in the next generation.
+
+\subsection{CA embedded in an Ising model}
+
+In the proposed TC, we embed a $d$-dimensional CA into a $(d+1)$-dimensional energy model, where the extra dimension is used to encode the time-evolution of the CA.
+The TC has a translational invariant structure, as shown in \Cref{Surface-programmable-thermodynamic computer}.
+The repeating structures are associated with a same energy model representing the transition rule of the CA.
+%The ground state of the energy model is associated with the state transition encoded in the transition rule.
+In the following, we will show how to encode the transition rule of the CA into the Ising model:
+\begin{equation}\label{eq:ising}
+E(\vs) = \sum_{i < j} J_{ij}s_us_v + \sum_{i=1}^{n}h_i s_i,
+\end{equation}
+where $n$ is the number of spins, $h_i$ is onsite energy, $J_{ij}$ is interaction energy and
+$s_i \in \{-1, 1\}$ is local spin. $s_i=1$ means spin-up that corresponds to the state $1$ of the CA and $s_i=-1$ means spin-down that corresponds to the state $0$ of the CA.
 
 \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
 \tikzset {_ue4dovf1e/.code = {\pgfsetadditionalshadetransform{ \pgftransformshift{\pgfpoint{0 bp } { -37.5 bp }  }  \pgftransformrotate{0 }  \pgftransformscale{2 }  }}}
@@ -616,62 +663,24 @@ color(100bp)=(transparent!80) }
     \label{Surface-programmable-thermodynamic computer}
 \end{figure}
 
-The inputs, including the data and the program are encoded in the initial configuration of the spins on the left surface. These spins are fixed during the computation.
-The entire computing process can be described by gradually moving an external heat bath with finite width from the input end to the output end.
-It creates a temperature gradient and, consequently, a heat zone of width $W$. By utilizing thermal fluctuations from the heat bath, the spins in different layers sequentially settle into low-energy states within the state space, effectively completing the iterative computation of the CA.
-
-%Users can design the computing algorithm and obtain the desired output by setting the input configuration and then making slight movements to the external heat bath, requiring only approximately linear time (up to a $\log^2$ factor) with respect to the number of layers.
-
-\section{Model and Method}\label{sec:model-method}
-
-\subsection{Elementary cellular automata}\label{elementary-cellular-automata}
-In cellular automata (CA), `space' is a regular lattice of `cells', each of which contains one of a small allowed set of integers.
-Only cells that are close together interact in one `time-step'-the time evolution is given by a rule that looks at the contents of a few neighbouring cells, and decides what should change. At each step, this local rule is applied everywhere simultaneously~\cite{}.
-Depending on different rules, some CAs can be more complex than others.
-The most interesting category is those proved to be universal~\cite{Berlekamp2004}, meaning that they can simulate any computer program. The best-known examples in two-dimensional include Conway's~\cite{Games1970} ``Game of Life'', Margolus's reversible CA~\cite{Margolus1984} and its quantum version~\cite{Arrighi2012}.
-The simplest universal CA is a 1-dimensional CA, namely, the rule 110 CA~\cite{Cook2009}.
-This CA is an elementary CA that defined on a one dimensional grid, each cell has two possible states (labeled by 0 and 1). The rule of an elementary CA to determine the state of the cell in next generation depends only on the current state of the cell and its two immediate neighbors. The number of possible elementary CA rules is the same as the number of 3-input Boolean functions, which is $2^{2^3} = 256$. The Boolean function for rule 110 is shown in the following table:
-
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
-\hline
-Current Pattern & 111 & 110 & 101 & 100 & 011 & 010 & 001 & 000 \\
-\hline
-New Center Cell & 0 & 1 & 1 & 0 & 1 & 1 & 1 & 0 \\
-\hline
-\end{tabular}
-
-The name of the rule comes from the binary representation of the rule number, which is 110 in decimal.
-Let us denote the states of the three cells as $p$, $q$, and $r$, from left to right, respectively. The rule 110 can be expressed as the following Boolean function:
-\begin{equation}\label{eq:110rule}
-    q^\prime = r \land \neg (q \land \neg p)
-\end{equation}
-where $q^\prime$ is the state of the center cell in the next generation.
-
-\subsection{CA embedded in an Ising model}
-
-An $n$-vertex fully connected spin-glass Hamiltonian is described as follows.
-
-\begin{equation}\label{eq:ising}
-E(\vs) = \sum_{i < j} J_{ij}s_us_v + \sum_{i=1}^{n}h_i s_i
-\end{equation}
-
-where $h_i$ is onsite energy, $J_{ij}$ is interaction energy and
-$s_i \in \{-1, 1\}$ is local spin. $s_i=1$ means spin-up and $s_i=-1$ means spin-down.
-
-Previous studies have shown that the Ising model is universal for computation~\cite{Aadit2022, onizawa2020design, camsari2017stochastic}, meaning that any logic circuit can be encoded into the Ising model and solved by finding the ground state of the Ising model. A universal set logic gate gadgets are designed, by concatenating which any logic circuit can be constructed.
-For example the logic expression $z = \neg (a \land b)$ can be encoded into the Ising model by the following Hamiltonian:
+The logic gates are encoded in the degenerate ground states of the Ising gadgets~\cite{Aadit2022, onizawa2020design, camsari2017stochastic}.
+By driving the system to the ground state, the spins naturally satisfies the logic expression.
+The conjunction of logic gates can be represented as the summation of the corresponding Ising Hamiltonians.
+For example the logic expression $z = \neg (a \land b)$ can be encoded into the Ising gadget by combining two Hamiltonians:
 \begin{equation}
     \begin{split}
-        E_{c = a \land b} &= s_a s_b -2 s_a s_c -2 s_bs_c + s_a + s_b -2 s_c\\
-        E_{z = \neg c} &= s_c s_z\\
-        E_{z = \neg (a \land b)} &= E_{z = \neg c} + E_{c = a \land b}
+        E_{c = a \land b} &= s_a s_b -2 s_a s_c -2 s_bs_c + s_a + s_b -2 s_c,\\
+        E_{z = \neg c} &= s_c s_z,\\
+        E_{z = \neg (a \land b)} &= E_{z = \neg c} + E_{c = a \land b},
     \end{split}
 \end{equation}
-where, the variable $c$ is an ancilla spin.
-A CA can be viewed as a translational invariant logic circuit, and thus can be encoded into the Ising model. The ground states of the Ising model encode the correspondence between the inputs and the outputs of the CA.
-Directly synthesizing the logic circuit for the universal $110$ rule (\Cref{eq:110rule}) requires at least 3 ancilla spins, which is far from optimal. By converting the gadget finding problem to a linear programming problem~\cite{Kolman1995}, we propose a provable optimal method to encode any CA rule into the Ising model, which is described in \Cref{sec:gadget-design}.
-The proposed gadget for the $110$ rule is shown in \Cref{Surface-programmable-thermodynamic computer}, which only requires 1 ancilla spin.
-The interaction energy and onsite energy of the rule 110 gadget are given below, where $p, q, r$ and inputs and $q'$ is the output in \Cref{Surface-programmable-thermodynamic computer}, respectively, while spin $A$ is the auxiliary spin.
+where we add an ancilla spin $c$ to help encode the logic gate.
+By driving the system to the ground state, all component Hamiltonians are minimized, and the logic expression is satisfied.
+
+A CA can be viewed as a translational invariant logic circuit, thus can be encoded into an Ising model.
+Directly synthesizing the logic circuit for the universal $110$ rule (\Cref{eq:110rule}) requires at least 3 ancilla spins, which is far from optimal.
+In \Cref{sec:gadget-design}, we introduce a provable optimal method to design Ising gadgets by converting the problem to a linear programming problem~\cite{Kolman1995}.
+With the new algorithm, we show that the $5$-spin gadget for the $110$ rule given below is optimal:
 \begin{equation}
 J = \begin{blockarray}{cccccc}
 & p & q & r & q^\prime & A\\
@@ -692,15 +701,17 @@ r & 2\\
 q^\prime & 2\\
 A & 5\\
 \end{block}
-\end{blockarray}
+\end{blockarray},
 \end{equation}
+where $p, q, r$ and inputs and $q'$ correspond to the output in \Cref{Surface-programmable-thermodynamic computer}, and $A$ is the auxiliary spin.
 %Since a copy gate\jinguo{do we really use copy gates?} \ym{No need in practice, but indeed used in Fig.1a} can be simply described as two spins with an interaction $J_{u, v}=1$, and by applying the method of connecting logic gates~\cite{Aadit2022}, we can concatenate the rule 110 gadget with some copy gates, ultimately forming
-By concatenating the rule 110 gadgets, we can construct a 2-dimensional TC that implements the rule 110 CA, as shown in \Cref{Surface-programmable-thermodynamic computer}.
-The gadget we constructed based on the Rule 110 CA naturally possesses Turing completeness. Therefore, this 2-dimensional TC is capable of universal computing.
 
-To set the inputs, we raise or lower the energy of spins on the left surface. To set a spin to $s_i=-1/1$, we raise/lower the external field $h_i$ by $\Delta_{in}>0$. By setting all the spins on the left surface, the ground state of the TC has no degeneracy, and the output is encoded in the spins on the right surface.
-One can also set the outputs by raising or lowering the energy of spins on the right surface. Due to the lack of reversibility, the ground state may still have degeneracy.
-Each ground states corresponds to a solution to the encoded circuit satisfaction problem if the target circuit is satisfiable.
+By concatenating this gadget in a translational invariant manner, we construct a 2-dimensional TC that implements the $110$ rule CA that is capable of universal computing.
+%This $110$ rule CA has been proved to be Turing complete~\cite{Cook2009}. Therefore, this 2-dimensional TC is capable of universal computing.
+The inputs are encoded in the spins on the left surface.
+To fix an input to $0$ or $1$, we raise or lower the external field $h_i$ by $\Delta_{in}>0$.
+Similarly, we can also set the outputs by raising or lowering the energy of spins on the right surface.
+%Each ground states corresponds to a solution to the encoded circuit satisfaction problem if the target circuit is satisfiable.
 We denote the computation from the left to the right as the \emph{deterministic computation}, and the computation from the right to the left as the \emph{non-deterministic computation}.
 
 \subsection{Compute by annealing}\label{simulated-annealing-algorithm}
@@ -978,7 +989,7 @@ Potential advantages: energy saving, parallelism, no size limits (robust to quan
 
 \section{Ising machine gadget design}\label{sec:gadget-design}
 To map our toy model in \Cref{eq:toy-hamiltonian} to
-spin-glass model, we used Linear Programming algorithm.
+Ising model, we used Linear Programming algorithm.
 Linear problems are problems that can be express in standard form as
 
 \begin{equation}
@@ -989,7 +1000,7 @@ Linear problems are problems that can be express in standard form as
     \end{split}
 \end{equation}
 
-Here with a spin-glass consists $N$ atoms, we choose $n$ to be $\frac{N(N-1)}{2} + N$, which means each variable $x_i$ represents a correspond interaction energy $J_{u, v}$ or a correspond onsite energy $h_u$, we assigned aliases to these $x_i$ as $x_{u,v}$ or $x_{u}$.
+Here with a Ising model consists $N$ atoms, we choose $n$ to be $\frac{N(N-1)}{2} + N$, which means each variable $x_i$ represents a correspond interaction energy $J_{u, v}$ or a correspond onsite energy $h_u$, we assigned aliases to these $x_i$ as $x_{u,v}$ or $x_{u}$.
 
 Let the configuration space of the system be $S = \{\mathbf s_i\mid i=1,\ldots, 2^N\}$, each associated with an energy $H(\mathbf s_i)$. We denote the target states with minimum energy as $S_{\text{min}} \subseteq S$. We can express the linear programming problem as
 
@@ -1006,7 +1017,7 @@ constraints are linear. The less constraints and equality constraints
 can be easily transformed into inequality constraints by adding ancilla
 variables.
 
-We set the $S_{\text{min}}$ to be the eight degenerate ground states of the spin-glass model to implement the $110$ rule.
+We set the $S_{\text{min}}$ to be the eight degenerate ground states of the Ising model to implement the $110$ rule.
 This is overly strict, as we do not consider the case that the ground states for different input signals to have degeneracy.
 The minimum number of atoms required to satisfy the
 constraints is 5. We set the target states to
@@ -1027,7 +1038,7 @@ $\uparrow$ & $\uparrow$ & $\downarrow$ & $\uparrow$ & $?$ \\
 $\uparrow$ & $\uparrow$ & $\uparrow$ & $\downarrow$ & $?$ \\
 \hline
 \end{tabular}
-\caption{The eight degenerate ground states of the spin-glass model to implement the $110$ rule.}
+\caption{The eight degenerate ground states of the Ising model to implement the $110$ rule.}
 \end{table}
 
 where the ancilla bit in each row can be either $\uparrow$ or
@@ -1209,14 +1220,14 @@ can explicitly write out the effective magnetic field.
 \]
 
 Integrate the ordinary differential equation then we get the classical
-dynamics of this spin-glass model. However, result shows that it is
+dynamics of this Ising model. However, result shows that it is
 extremely hard to find the solution when the number of layers exceed
 $4$ (input layer is pinned).
 
-The reason maybe that the mapped spin-glass model lies in the hard
+The reason maybe that the mapped Ising model lies in the hard
 region in ~\cite{Wang2013}. Because every interaction energy is positive, which
 gives rise to strong frustration. Results in this reference also shows that even in
-random spin-glass model, there exist hard instance that can't be solve.
+random Ising model, there exist hard instance that can't be solve.
 
 
 
